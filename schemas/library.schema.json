@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reading Progress Engine Library",
+  "description": "Contract for the generated data/library.json index.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "generatedAt",
+    "totalBooks",
+    "totalPagesRead",
+    "booksCompleted",
+    "booksReading",
+    "booksPaused",
+    "booksToRead",
+    "booksDropped",
+    "books"
+  ],
+  "properties": {
+    "generatedAt": {
+      "$ref": "#/$defs/utcTimestamp",
+      "description": "UTC timestamp when the index was generated."
+    },
+    "totalBooks": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "totalPagesRead": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "booksCompleted": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "booksReading": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "booksPaused": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "booksToRead": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "booksDropped": {
+      "$ref": "#/$defs/nonNegativeInteger"
+    },
+    "books": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/libraryBook"
+      },
+      "description": "Generated summary for every book in data/books."
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "nonNegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "nullableDate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "bookStatus": {
+      "type": "string",
+      "enum": [
+        "to-read",
+        "reading",
+        "paused",
+        "completed",
+        "dropped"
+      ]
+    },
+    "progress": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "multipleOf": 0.01
+    },
+    "averagePagesPerStrike": {
+      "type": "number",
+      "minimum": 0,
+      "multipleOf": 0.1
+    },
+    "libraryBook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "title",
+        "author",
+        "category",
+        "status",
+        "totalPages",
+        "currentPage",
+        "progress",
+        "totalStrikes",
+        "totalPagesRead",
+        "firstStrike",
+        "lastStrike",
+        "averagePagesPerStrike"
+      ],
+      "properties": {
+        "slug": {
+          "$ref": "#/$defs/slug"
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "author": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "category": {
+          "$ref": "#/$defs/slug"
+        },
+        "status": {
+          "$ref": "#/$defs/bookStatus"
+        },
+        "totalPages": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "currentPage": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "progress": {
+          "$ref": "#/$defs/progress"
+        },
+        "totalStrikes": {
+          "$ref": "#/$defs/nonNegativeInteger"
+        },
+        "totalPagesRead": {
+          "$ref": "#/$defs/nonNegativeInteger"
+        },
+        "firstStrike": {
+          "$ref": "#/$defs/nullableDate"
+        },
+        "lastStrike": {
+          "$ref": "#/$defs/nullableDate"
+        },
+        "averagePagesPerStrike": {
+          "$ref": "#/$defs/averagePagesPerStrike"
+        }
+      }
+    }
+  }
+}

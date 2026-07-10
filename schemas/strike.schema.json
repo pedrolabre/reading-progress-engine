@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reading Progress Engine Strike",
+  "description": "Contract for one reading session stored at data/strikes/{book-slug}/{date}.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "book",
+    "date",
+    "startPage",
+    "endPage",
+    "pagesRead"
+  ],
+  "properties": {
+    "book": {
+      "$ref": "#/$defs/slug",
+      "description": "Slug of the related book."
+    },
+    "date": {
+      "$ref": "#/$defs/date",
+      "description": "Date when the reading session happened."
+    },
+    "startPage": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Page where the session started."
+    },
+    "endPage": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Page where the session ended."
+    },
+    "pagesRead": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Pages read during the session. Generated from endPage - startPage by the app."
+    },
+    "chapter": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Free-form chapter or section label."
+    },
+    "duration": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Reading duration in minutes."
+    },
+    "notes": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Free-form notes about the session."
+    },
+    "mood": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Optional free-form mood label. Suggested values include focused, distracted, relaxed, tired and excited.",
+      "examples": [
+        "focused",
+        "distracted",
+        "relaxed",
+        "tired",
+        "excited"
+      ]
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    }
+  }
+}

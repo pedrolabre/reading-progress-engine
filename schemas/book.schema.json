@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reading Progress Engine Book",
+  "description": "Contract for one book file stored at data/books/{slug}.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "title",
+    "author",
+    "totalPages",
+    "currentPage",
+    "status",
+    "category"
+  ],
+  "properties": {
+    "title": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Display title of the book."
+    },
+    "author": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Author name. Multiple authors may be comma-separated."
+    },
+    "totalPages": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of the last page in the book."
+    },
+    "currentPage": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Current reading page. Zero means not started."
+    },
+    "status": {
+      "$ref": "#/$defs/bookStatus"
+    },
+    "category": {
+      "$ref": "#/$defs/slug",
+      "description": "Primary category slug."
+    },
+    "genres": {
+      "type": "array",
+      "default": [],
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/slug"
+      },
+      "description": "Secondary genre slugs used for filtering."
+    },
+    "language": {
+      "type": "string",
+      "pattern": "^[a-z]{2}$",
+      "description": "ISO 639-1 language code."
+    },
+    "startDate": {
+      "$ref": "#/$defs/date",
+      "description": "Date when reading started."
+    },
+    "endDate": {
+      "default": null,
+      "description": "Date when reading ended, or null while unfinished.",
+      "anyOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "isbn": {
+      "type": "string",
+      "pattern": "^(?:97[89][ -]?)?(?:[0-9][ -]?){9}[0-9Xx]$",
+      "description": "ISBN-10 or ISBN-13 shape, with optional hyphens or spaces."
+    },
+    "publisher": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Book publisher."
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 9999,
+      "description": "Four-digit publication year."
+    },
+    "notes": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Free-form notes about the book."
+    },
+    "tags": {
+      "type": "array",
+      "default": [],
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/slug"
+      },
+      "description": "Personal organization tags."
+    },
+    "coverUrl": {
+      "default": null,
+      "description": "Optional cover image URL reserved for future UI use.",
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "bookStatus": {
+      "type": "string",
+      "enum": [
+        "to-read",
+        "reading",
+        "paused",
+        "completed",
+        "dropped"
+      ]
+    }
+  }
+}

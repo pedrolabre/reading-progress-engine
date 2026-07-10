@@ -142,6 +142,7 @@ Isso é intencional. A aplicação web **não** faz push no GitHub. Ela gera arq
 ```
 reading-progress-engine/
 ├── README.md
+├── schemas
 ```
 
 > A estrutura vai crescendo junto com o código. Tudo que for adicionado aparece aqui.
