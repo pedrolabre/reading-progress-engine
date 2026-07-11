@@ -1,0 +1,24 @@
+{
+  "title": "The Way of Kings",
+  "author": "Brandon Sanderson",
+  "totalPages": 1007,
+  "currentPage": 245,
+  "status": "reading",
+  "category": "fantasy",
+  "genres": [
+    "epic-fantasy",
+    "fiction"
+  ],
+  "language": "en",
+  "startDate": "2026-02-10",
+  "endDate": null,
+  "isbn": "978-0-7653-2635-5",
+  "publisher": "Tor Books",
+  "year": 2010,
+  "notes": "Active long read used to demonstrate ongoing progress and multiple strikes.",
+  "tags": [
+    "series-cosmere",
+    "long-read"
+  ],
+  "coverUrl": null
+}
