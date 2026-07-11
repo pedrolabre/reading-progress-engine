@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Route, Routes, useParams } from 'react-router';
+import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -11,32 +11,46 @@ const navItems = [
 const generatorPages = {
   book: {
     title: 'Novo livro',
-    entity: 'book',
+    entity: 'Book',
+    description: 'Metadados de leitura em um arquivo JSON por livro.',
+    filename: '{slug}.json',
     path: 'data/books/{slug}.json',
+    fields: ['Titulo', 'Autor', 'Total de paginas', 'Status', 'Categoria'],
   },
   strike: {
     title: 'Novo strike',
-    entity: 'strike',
+    entity: 'Strike',
+    description: 'Sessao de leitura vinculada a um livro pelo slug.',
+    filename: '{date}.json',
     path: 'data/strikes/{book-slug}/{date}.json',
+    fields: ['Livro', 'Data', 'Pagina inicial', 'Pagina final', 'Paginas lidas'],
   },
   category: {
     title: 'Nova categoria',
-    entity: 'category',
+    entity: 'Category',
+    description: 'Agrupamento principal usado para organizar a biblioteca.',
+    filename: '{slug}.json',
     path: 'data/categories/{slug}.json',
+    fields: ['Nome', 'Slug', 'Descricao', 'Cor'],
   },
 };
 
 function App() {
   return (
-    <div className="app">
-      <header>
-        <p className="project-label">Reading Progress Engine</p>
+    <div className="app-shell">
+      <header className="site-header">
+        <Link className="brand" to="/" aria-label="Reading Progress Engine - Biblioteca">
+          <span className="brand-name">Reading Progress Engine</span>
+          <span className="brand-tagline">Structured reading data</span>
+        </Link>
 
-        <nav aria-label="Navegacao principal">
+        <nav className="primary-nav" aria-label="Navegacao principal">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
-              className={({ isActive }) => (isActive ? 'active' : undefined)}
+              className={({ isActive }) =>
+                isActive ? 'primary-nav-link is-active' : 'primary-nav-link'
+              }
               end={item.end}
               to={item.to}
             >
@@ -46,7 +60,7 @@ function App() {
         </nav>
       </header>
 
-      <main>
+      <main className="main-content">
         <Routes>
           <Route index element={<LibraryPage />} />
           <Route path="book/:slug" element={<BookDetailPage />} />
@@ -62,8 +76,42 @@ function App() {
 
 function LibraryPage() {
   return (
-    <Page title="Biblioteca">
-      <p>Scaffold inicial da aplicacao web.</p>
+    <Page
+      eyebrow="Biblioteca"
+      title="Historico de leitura em dados"
+      description="A home fica reservada para a biblioteca visual do MVP, mantendo os dados no repositorio e o commit sob controle manual."
+      actions={
+        <>
+          <Link className="button-link button-link-primary" to="/new/book">
+            Novo livro
+          </Link>
+          <Link className="button-link" to="/new/strike">
+            Novo strike
+          </Link>
+        </>
+      }
+    >
+      <section className="content-grid" aria-label="Areas da biblioteca">
+        <article className="panel panel-feature">
+          <p className="panel-label">Biblioteca</p>
+          <h2>Base pronta para cards de livros</h2>
+          <p>
+            O espaco principal ja acomoda estado vazio, resumo e futuras listas
+            de livros sem depender de backend ou conta.
+          </p>
+          <div className="metric-row" aria-label="Rotas preparadas">
+            <MetricCard value="5" label="rotas do MVP" />
+            <MetricCard value="3" label="geradores" />
+            <MetricCard value="0" label="salvamentos automaticos" />
+          </div>
+        </article>
+
+        <aside className="panel panel-compact" aria-label="Acoes principais">
+          <p className="panel-label">Geracao</p>
+          <h2>Arquivos JSON</h2>
+          <RouteList />
+        </aside>
+      </section>
     </Page>
   );
 }
@@ -72,8 +120,20 @@ function BookDetailPage() {
   const { slug } = useParams();
 
   return (
-    <Page title="Detalhe do livro">
-      <p>Rota reservada para o livro: {slug}</p>
+    <Page
+      eyebrow="Livro"
+      title="Detalhe do livro"
+      description="Rota preparada para receber metadados, metricas e timeline quando a visualizacao da biblioteca for implementada."
+      actions={
+        <Link className="button-link" to="/new/strike">
+          Novo strike
+        </Link>
+      }
+    >
+      <section className="panel">
+        <p className="panel-label">Slug selecionado</p>
+        <code className="path-chip">{slug}</code>
+      </section>
     </Page>
   );
 }
@@ -82,27 +142,96 @@ function GeneratorPage({ type }) {
   const page = generatorPages[type];
 
   return (
-    <Page title={page.title}>
-      <p>Gerador futuro de JSON para {page.entity}.</p>
-      <code>{page.path}</code>
+    <Page
+      eyebrow="Gerador"
+      title={page.title}
+      description={page.description}
+    >
+      <section className="generator-layout">
+        <article className="panel">
+          <p className="panel-label">Campos planejados</p>
+          <h2>{page.entity}</h2>
+          <ul className="field-list">
+            {page.fields.map((field) => (
+              <li key={field}>{field}</li>
+            ))}
+          </ul>
+        </article>
+
+        <aside className="panel panel-compact">
+          <p className="panel-label">Arquivo</p>
+          <dl className="file-summary">
+            <div>
+              <dt>Nome</dt>
+              <dd>{page.filename}</dd>
+            </div>
+            <div>
+              <dt>Caminho</dt>
+              <dd>
+                <code className="path-chip">{page.path}</code>
+              </dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
     </Page>
   );
 }
 
 function NotFoundPage() {
   return (
-    <Page title="Pagina indisponivel">
-      <p>Rota nao encontrada.</p>
+    <Page
+      eyebrow="404"
+      title="Pagina indisponivel"
+      description="A rota solicitada nao existe nesta aplicacao."
+      actions={
+        <Link className="button-link button-link-primary" to="/">
+          Voltar para a biblioteca
+        </Link>
+      }
+    >
+      <section className="panel">
+        <p className="panel-label">Rotas disponiveis</p>
+        <RouteList />
+      </section>
     </Page>
   );
 }
 
-function Page({ title, children }) {
+function Page({ eyebrow, title, description, actions, children }) {
   return (
-    <section className="page">
-      <h1>{title}</h1>
+    <section className="page-layout">
+      <div className="page-header">
+        <div className="page-copy">
+          <p className="eyebrow">{eyebrow}</p>
+          <h1>{title}</h1>
+          {description ? <p className="page-description">{description}</p> : null}
+        </div>
+        {actions ? <div className="page-actions">{actions}</div> : null}
+      </div>
       {children}
     </section>
+  );
+}
+
+function RouteList() {
+  return (
+    <ul className="route-list">
+      {navItems.map((item) => (
+        <li key={item.to}>
+          <Link to={item.to}>{item.label}</Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function MetricCard({ value, label }) {
+  return (
+    <div className="metric-card">
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </div>
   );
 }
 
