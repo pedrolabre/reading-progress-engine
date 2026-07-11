@@ -1,6 +1,22 @@
 import React from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
+import CopyButton from './components/CopyButton.jsx';
+import DownloadButton from './components/DownloadButton.jsx';
+import FileInfo from './components/FileInfo.jsx';
+import JsonPreview from './components/JsonPreview.jsx';
+import {
+  createBookJson,
+  createCategoryJson,
+  createStrikeJson,
+  toJsonString,
+} from './utils/jsonGenerator.js';
+import {
+  getBookFileInfo,
+  getCategoryFileInfo,
+  getStrikeFileInfo,
+} from './utils/filePaths.js';
+
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
   { to: '/new/book', label: 'Novo livro' },
@@ -34,6 +50,58 @@ const generatorPages = {
     fields: ['Nome', 'Slug', 'Descricao', 'Cor'],
   },
 };
+
+const generatorExamples = {
+  book: createExample(
+    createBookJson({
+      title: 'A Wizard of Earthsea',
+      author: 'Ursula K. Le Guin',
+      totalPages: 205,
+      currentPage: 64,
+      status: 'reading',
+      category: 'fantasy',
+      genres: ['fantasy', 'classic'],
+      language: 'en',
+      tags: ['earthsea'],
+    }),
+    getBookFileInfo('A Wizard of Earthsea')
+  ),
+  strike: createExample(
+    createStrikeJson({
+      book: 'a-wizard-of-earthsea',
+      date: '2026-07-11',
+      startPage: 64,
+      endPage: 91,
+      chapter: 'The School for Wizards',
+      duration: 42,
+      mood: 'focused',
+    }),
+    getStrikeFileInfo('a-wizard-of-earthsea', '2026-07-11')
+  ),
+  category: createCategoryExample(),
+};
+
+function createCategoryExample() {
+  const fileInfo = getCategoryFileInfo('Speculative Fiction');
+
+  return createExample(
+    createCategoryJson({
+      name: 'Speculative Fiction',
+      slug: fileInfo.slug,
+      description: 'Fiction that bends reality through imagined worlds, futures or rules.',
+      color: '#70B7FF',
+    }),
+    fileInfo
+  );
+}
+
+function createExample(data, fileInfo) {
+  return {
+    data,
+    fileInfo,
+    json: toJsonString(data),
+  };
+}
 
 function App() {
   return (
@@ -140,6 +208,7 @@ function BookDetailPage() {
 
 function GeneratorPage({ type }) {
   const page = generatorPages[type];
+  const example = generatorExamples[type];
 
   return (
     <Page
@@ -158,20 +227,26 @@ function GeneratorPage({ type }) {
           </ul>
         </article>
 
-        <aside className="panel panel-compact">
-          <p className="panel-label">Arquivo</p>
+        <aside className="panel panel-compact generation-preview">
+          <p className="panel-label">Amostra JSON</p>
           <dl className="file-summary">
             <div>
-              <dt>Nome</dt>
+              <dt>Modelo</dt>
               <dd>{page.filename}</dd>
             </div>
             <div>
-              <dt>Caminho</dt>
+              <dt>Destino</dt>
               <dd>
                 <code className="path-chip">{page.path}</code>
               </dd>
             </div>
           </dl>
+          <FileInfo {...example.fileInfo} />
+          <div className="file-actions" aria-label={`Acoes para ${example.fileInfo.fileName}`}>
+            <CopyButton text={example.json} />
+            <DownloadButton content={example.json} fileName={example.fileInfo.fileName} />
+          </div>
+          <JsonPreview json={example.json} title={`${page.entity} JSON`} />
         </aside>
       </section>
     </Page>

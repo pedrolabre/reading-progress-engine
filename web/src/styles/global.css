@@ -112,6 +112,7 @@ ol {
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
+  cursor: pointer;
   transition:
     background-color 120ms ease,
     transform 120ms ease,
@@ -139,6 +140,12 @@ ol {
   border-color: var(--color-border);
   background: var(--color-accent);
   color: var(--color-text);
+}
+
+.button-link:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+  transform: none;
 }
 
 .main-content {
@@ -337,6 +344,10 @@ p {
   margin: 0;
 }
 
+.file-summary + .file-summary {
+  margin-top: var(--space-4);
+}
+
 .file-summary div {
   display: grid;
   gap: var(--space-2);
@@ -352,6 +363,15 @@ p {
 .file-summary dd {
   min-width: 0;
   margin: 0;
+  color: var(--color-text);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.file-summary-dense {
+  gap: var(--space-3);
+  border-top: 2px solid var(--color-border);
+  padding-top: var(--space-4);
 }
 
 .path-chip {
@@ -367,6 +387,62 @@ p {
   font-size: 0.9rem;
   line-height: 1.5;
   overflow-wrap: anywhere;
+}
+
+.generation-preview {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.file-actions .button-link {
+  flex: 1 1 150px;
+}
+
+.button-link[data-state='copied'] {
+  background: var(--color-warm);
+}
+
+.button-link[data-state='error'] {
+  background: var(--color-secondary);
+}
+
+.json-preview-block {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-2);
+}
+
+.json-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.json-preview {
+  max-height: 310px;
+  margin: 0;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: var(--color-surface-strong);
+  color: var(--color-surface);
+  box-shadow: 5px 5px 0 var(--color-accent-strong);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  overflow: auto;
+  white-space: pre;
 }
 
 @media (max-width: 860px) {
