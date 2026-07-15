@@ -9,6 +9,7 @@ import {
   createLibraryLoadingState,
   loadLibraryData,
 } from './utils/libraryLoader.js';
+import { createLibraryMetrics } from './utils/libraryMetrics.js';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -129,6 +130,7 @@ function LibraryLoaderPanel({ libraryState }) {
 
   const data = libraryState.data;
   const summary = data.summary;
+  const runtimeMetrics = createLibraryMetrics(data);
 
   return (
     <article className="panel panel-feature loader-panel" aria-live="polite">
@@ -157,6 +159,26 @@ function LibraryLoaderPanel({ libraryState }) {
         <div>
           <dt>Avisos</dt>
           <dd>{summary.warningCount}</dd>
+        </div>
+      </dl>
+
+      <dl className="loader-summary" aria-label="Metricas calculadas em runtime">
+        <div>
+          <dt>Paginas lidas</dt>
+          <dd>{runtimeMetrics.summary.totalPagesRead}</dd>
+        </div>
+        <div>
+          <dt>Atividade</dt>
+          <dd>
+            {formatActivityRange(
+              runtimeMetrics.summary.firstActivityDate,
+              runtimeMetrics.summary.lastActivityDate
+            )}
+          </dd>
+        </div>
+        <div>
+          <dt>Avisos runtime</dt>
+          <dd>{runtimeMetrics.summary.warningCount}</dd>
         </div>
       </dl>
     </article>
@@ -240,6 +262,14 @@ function MetricCard({ value, label }) {
       <span>{label}</span>
     </div>
   );
+}
+
+function formatActivityRange(firstDate, lastDate) {
+  if (firstDate && lastDate && firstDate !== lastDate) {
+    return `${firstDate} ate ${lastDate}`;
+  }
+
+  return firstDate || lastDate || 'sem atividade';
 }
 
 export default App;

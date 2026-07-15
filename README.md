@@ -141,8 +141,27 @@ Isso é intencional. A aplicação web **não** faz push no GitHub. Ela gera arq
 
 ```
 reading-progress-engine/
-├── README.md
-├── schemas
+|-- README.md
+|-- data/
+|   |-- books/
+|   |-- categories/
+|   |-- strikes/
+|   `-- library.json
+|-- examples/
+|-- schemas/
+|-- scripts/
+`-- web/
+    |-- index.html
+    |-- package.json
+    |-- package-lock.json
+    `-- src/
+        |-- App.jsx
+        |-- components/
+        |-- pages/
+        |-- styles/
+        `-- utils/
+            |-- libraryLoader.js
+            `-- libraryMetrics.js
 ```
 
 > A estrutura vai crescendo junto com o código. Tudo que for adicionado aparece aqui.
