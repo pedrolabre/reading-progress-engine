@@ -2,19 +2,16 @@ import React from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
 import BookFormPage from './pages/BookFormPage.jsx';
+import StrikeFormPage from './pages/StrikeFormPage.jsx';
 import CopyButton from './components/CopyButton.jsx';
 import DownloadButton from './components/DownloadButton.jsx';
 import FileInfo from './components/FileInfo.jsx';
 import JsonPreview from './components/JsonPreview.jsx';
 import {
   createCategoryJson,
-  createStrikeJson,
   toJsonString,
 } from './utils/jsonGenerator.js';
-import {
-  getCategoryFileInfo,
-  getStrikeFileInfo,
-} from './utils/filePaths.js';
+import { getCategoryFileInfo } from './utils/filePaths.js';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -24,14 +21,6 @@ const navItems = [
 ];
 
 const generatorPages = {
-  strike: {
-    title: 'Novo strike',
-    entity: 'Strike',
-    description: 'Sessao de leitura vinculada a um livro pelo slug.',
-    filename: '{date}.json',
-    path: 'data/strikes/{book-slug}/{date}.json',
-    fields: ['Livro', 'Data', 'Pagina inicial', 'Pagina final', 'Paginas lidas'],
-  },
   category: {
     title: 'Nova categoria',
     entity: 'Category',
@@ -43,18 +32,6 @@ const generatorPages = {
 };
 
 const generatorExamples = {
-  strike: createExample(
-    createStrikeJson({
-      book: 'a-wizard-of-earthsea',
-      date: '2026-07-11',
-      startPage: 64,
-      endPage: 91,
-      chapter: 'The School for Wizards',
-      duration: 42,
-      mood: 'focused',
-    }),
-    getStrikeFileInfo('a-wizard-of-earthsea', '2026-07-11')
-  ),
   category: createCategoryExample(),
 };
 
@@ -110,7 +87,7 @@ function App() {
           <Route index element={<LibraryPage />} />
           <Route path="book/:slug" element={<BookDetailPage />} />
           <Route path="new/book" element={<BookFormPage />} />
-          <Route path="new/strike" element={<GeneratorPage type="strike" />} />
+          <Route path="new/strike" element={<StrikeFormPage />} />
           <Route path="new/category" element={<GeneratorPage type="category" />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
