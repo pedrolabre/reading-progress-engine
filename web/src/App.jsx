@@ -1,18 +1,17 @@
 import React from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
+import BookFormPage from './pages/BookFormPage.jsx';
 import CopyButton from './components/CopyButton.jsx';
 import DownloadButton from './components/DownloadButton.jsx';
 import FileInfo from './components/FileInfo.jsx';
 import JsonPreview from './components/JsonPreview.jsx';
 import {
-  createBookJson,
   createCategoryJson,
   createStrikeJson,
   toJsonString,
 } from './utils/jsonGenerator.js';
 import {
-  getBookFileInfo,
   getCategoryFileInfo,
   getStrikeFileInfo,
 } from './utils/filePaths.js';
@@ -25,14 +24,6 @@ const navItems = [
 ];
 
 const generatorPages = {
-  book: {
-    title: 'Novo livro',
-    entity: 'Book',
-    description: 'Metadados de leitura em um arquivo JSON por livro.',
-    filename: '{slug}.json',
-    path: 'data/books/{slug}.json',
-    fields: ['Titulo', 'Autor', 'Total de paginas', 'Status', 'Categoria'],
-  },
   strike: {
     title: 'Novo strike',
     entity: 'Strike',
@@ -52,20 +43,6 @@ const generatorPages = {
 };
 
 const generatorExamples = {
-  book: createExample(
-    createBookJson({
-      title: 'A Wizard of Earthsea',
-      author: 'Ursula K. Le Guin',
-      totalPages: 205,
-      currentPage: 64,
-      status: 'reading',
-      category: 'fantasy',
-      genres: ['fantasy', 'classic'],
-      language: 'en',
-      tags: ['earthsea'],
-    }),
-    getBookFileInfo('A Wizard of Earthsea')
-  ),
   strike: createExample(
     createStrikeJson({
       book: 'a-wizard-of-earthsea',
@@ -132,7 +109,7 @@ function App() {
         <Routes>
           <Route index element={<LibraryPage />} />
           <Route path="book/:slug" element={<BookDetailPage />} />
-          <Route path="new/book" element={<GeneratorPage type="book" />} />
+          <Route path="new/book" element={<BookFormPage />} />
           <Route path="new/strike" element={<GeneratorPage type="strike" />} />
           <Route path="new/category" element={<GeneratorPage type="category" />} />
           <Route path="*" element={<NotFoundPage />} />
