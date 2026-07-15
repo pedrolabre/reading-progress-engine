@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
 import LibraryGrid from './components/LibraryGrid.jsx';
+import LibrarySortControls from './components/LibrarySortControls.jsx';
 import BookFormPage from './pages/BookFormPage.jsx';
 import CategoryFormPage from './pages/CategoryFormPage.jsx';
 import StrikeFormPage from './pages/StrikeFormPage.jsx';
@@ -11,6 +12,12 @@ import {
   loadLibraryData,
 } from './utils/libraryLoader.js';
 import { createLibraryMetrics } from './utils/libraryMetrics.js';
+import {
+  DEFAULT_LIBRARY_SORT_ID,
+  LIBRARY_SORT_OPTIONS,
+  getLibrarySortOption,
+  sortLibraryBooks,
+} from './utils/librarySorting.js';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -60,6 +67,7 @@ function App() {
 
 function LibraryPage() {
   const [libraryState, setLibraryState] = useState(() => createLibraryLoadingState());
+  const [librarySortId, setLibrarySortId] = useState(DEFAULT_LIBRARY_SORT_ID);
 
   useEffect(() => {
     setLibraryState(loadLibraryData());
@@ -81,12 +89,16 @@ function LibraryPage() {
         </>
       }
     >
-      <LibraryView libraryState={libraryState} />
+      <LibraryView
+        libraryState={libraryState}
+        librarySortId={librarySortId}
+        onLibrarySortChange={setLibrarySortId}
+      />
     </Page>
   );
 }
 
-function LibraryView({ libraryState }) {
+function LibraryView({ libraryState, librarySortId, onLibrarySortChange }) {
   if (libraryState.status === LIBRARY_LOAD_STATUS.LOADING) {
     return (
       <section className="library-surface library-state" aria-live="polite" aria-busy="true">
@@ -123,6 +135,8 @@ function LibraryView({ libraryState }) {
   const data = libraryState.data;
   const runtimeMetrics = createLibraryMetrics(data);
   const warnings = [...data.warnings, ...runtimeMetrics.warnings];
+  const activeSortOption = getLibrarySortOption(librarySortId);
+  const sortedBooks = sortLibraryBooks(runtimeMetrics.books, activeSortOption.id);
 
   return (
     <section className="library-surface" aria-labelledby="library-grid-title">
@@ -132,9 +146,16 @@ function LibraryView({ libraryState }) {
           <h2 id="library-grid-title">Livros registrados</h2>
           <p>Progresso e atividade calculados a partir dos seus strikes.</p>
         </div>
-        <div className="library-context" aria-label="Contexto da biblioteca">
-          <span>{formatBookCount(runtimeMetrics.summary.totalBooks)}</span>
-          <span>Ordem inicial</span>
+        <div className="library-header-actions">
+          <div className="library-context" aria-label="Contexto da biblioteca">
+            <span>{formatBookCount(runtimeMetrics.summary.totalBooks)}</span>
+          </div>
+          <LibrarySortControls
+            activeOption={activeSortOption}
+            options={LIBRARY_SORT_OPTIONS}
+            sortId={activeSortOption.id}
+            onSortChange={onLibrarySortChange}
+          />
         </div>
       </header>
 
@@ -153,7 +174,7 @@ function LibraryView({ libraryState }) {
         </div>
       </dl>
 
-      <LibraryGrid books={runtimeMetrics.books} />
+      <LibraryGrid books={sortedBooks} />
       {warnings.length > 0 ? <RuntimeWarnings warnings={warnings} /> : null}
     </section>
   );

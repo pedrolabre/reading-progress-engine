@@ -397,6 +397,12 @@ p {
   gap: var(--space-2);
 }
 
+.library-header-actions {
+  display: grid;
+  justify-items: end;
+  gap: var(--space-2);
+}
+
 .library-context span {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -410,8 +416,40 @@ p {
   text-transform: uppercase;
 }
 
-.library-context span:last-child {
+.library-sort-controls {
+  display: grid;
+  min-width: min(100%, 260px);
+  gap: 6px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
   background: var(--color-warm-soft);
+  box-shadow: 3px 3px 0 var(--color-shadow);
+}
+
+.library-sort-controls label,
+.library-sort-controls p {
+  color: var(--color-text);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.library-sort-controls p {
+  margin: 0;
+}
+
+.library-sort-controls select {
+  width: 100%;
+  min-width: 0;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 7px 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  font-weight: 900;
 }
 
 .library-totals {
@@ -1238,8 +1276,14 @@ p {
     padding-left: var(--space-2);
   }
 
-  .library-context {
+  .library-context,
+  .library-header-actions {
+    justify-items: stretch;
     justify-content: flex-start;
+  }
+
+  .library-sort-controls {
+    min-width: 0;
   }
 
   .book-card {

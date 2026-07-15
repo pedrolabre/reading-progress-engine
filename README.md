@@ -162,12 +162,14 @@ reading-progress-engine/
         |   |-- DownloadButton.jsx
         |   |-- FileInfo.jsx
         |   |-- JsonPreview.jsx
-        |   `-- LibraryGrid.jsx
+        |   |-- LibraryGrid.jsx
+        |   `-- LibrarySortControls.jsx
         |-- pages/
         |-- styles/
         `-- utils/
             |-- libraryLoader.js
-            `-- libraryMetrics.js
+            |-- libraryMetrics.js
+            `-- librarySorting.js
 ```
 
 > A estrutura vai crescendo junto com o código. Tudo que for adicionado aparece aqui.
