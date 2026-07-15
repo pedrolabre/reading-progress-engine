@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, Route, Routes, useParams } from 'react-router';
+import { Link, NavLink, Route, Routes } from 'react-router';
 
 import LibraryFilterControls from './components/LibraryFilterControls.jsx';
 import LibraryGrid from './components/LibraryGrid.jsx';
 import LibrarySortControls from './components/LibrarySortControls.jsx';
+import BookDetailPage from './pages/BookDetailPage.jsx';
 import BookFormPage from './pages/BookFormPage.jsx';
 import CategoryFormPage from './pages/CategoryFormPage.jsx';
 import StrikeFormPage from './pages/StrikeFormPage.jsx';
@@ -263,28 +264,6 @@ function WarningList({ warnings }) {
         <li key={warning}>{warning}</li>
       ))}
     </ul>
-  );
-}
-
-function BookDetailPage() {
-  const { slug } = useParams();
-
-  return (
-    <Page
-      eyebrow="Livro"
-      title="Detalhe do livro"
-      description="Rota reservada para metadados, metricas e timeline. O detalhe permanece como placeholder nesta etapa."
-      actions={
-        <Link className="button-link" to="/new/strike">
-          Novo strike
-        </Link>
-      }
-    >
-      <section className="panel">
-        <p className="panel-label">Slug selecionado</p>
-        <code className="path-chip">{slug}</code>
-      </section>
-    </Page>
   );
 }
 

@@ -158,6 +158,8 @@ reading-progress-engine/
         |-- App.jsx
         |-- components/
         |   |-- BookCard.jsx
+        |   |-- BookDetail.jsx
+        |   |-- BookTimeline.jsx
         |   |-- CopyButton.jsx
         |   |-- DownloadButton.jsx
         |   |-- FileInfo.jsx
@@ -166,12 +168,25 @@ reading-progress-engine/
         |   |-- LibraryGrid.jsx
         |   `-- LibrarySortControls.jsx
         |-- pages/
+        |   |-- BookDetailPage.jsx
+        |   |-- BookFormPage.jsx
+        |   |-- CategoryFormPage.jsx
+        |   `-- StrikeFormPage.jsx
         |-- styles/
         `-- utils/
+            |-- bookDetail.js
+            |-- bookForm.js
+            |-- categoryForm.js
+            |-- clipboard.js
+            |-- download.js
+            |-- filePaths.js
+            |-- jsonGenerator.js
             |-- libraryFilters.js
             |-- libraryLoader.js
             |-- libraryMetrics.js
-            `-- librarySorting.js
+            |-- librarySorting.js
+            |-- slugify.js
+            `-- strikeForm.js
 ```
 
 > A estrutura vai crescendo junto com o código. Tudo que for adicionado aparece aqui.
