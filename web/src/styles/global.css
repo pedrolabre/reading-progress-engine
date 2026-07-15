@@ -239,7 +239,8 @@ p {
 }
 
 .book-form-layout,
-.strike-form-layout {
+.strike-form-layout,
+.category-form-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
   gap: 16px;
@@ -403,7 +404,8 @@ p {
 }
 
 .book-form-panel,
-.strike-form-panel {
+.strike-form-panel,
+.category-form-panel {
   display: grid;
   gap: var(--space-4);
 }
@@ -474,6 +476,19 @@ p {
   font-weight: 700;
 }
 
+.color-control-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 48px;
+  gap: var(--space-2);
+  align-items: stretch;
+}
+
+.form-field .color-picker {
+  min-height: 43px;
+  padding: 3px;
+  cursor: pointer;
+}
+
 .form-field textarea {
   min-height: 116px;
   resize: vertical;
@@ -509,7 +524,8 @@ p {
 }
 
 .book-preview-panel,
-.strike-preview-panel {
+.strike-preview-panel,
+.category-preview-panel {
   position: sticky;
   top: 96px;
 }
@@ -628,7 +644,8 @@ p {
   .content-grid,
   .generator-layout,
   .book-form-layout,
-  .strike-form-layout {
+  .strike-form-layout,
+  .category-form-layout {
     grid-template-columns: 1fr;
   }
 
@@ -656,7 +673,8 @@ p {
   }
 
   .book-preview-panel,
-  .strike-preview-panel {
+  .strike-preview-panel,
+  .category-preview-panel {
     position: static;
   }
 }
@@ -683,7 +701,8 @@ p {
   .metric-row,
   .field-list,
   .form-grid,
-  .slug-preview {
+  .slug-preview,
+  .color-control-row {
     grid-template-columns: 1fr;
   }
 }

@@ -2,16 +2,8 @@ import React from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
 import BookFormPage from './pages/BookFormPage.jsx';
+import CategoryFormPage from './pages/CategoryFormPage.jsx';
 import StrikeFormPage from './pages/StrikeFormPage.jsx';
-import CopyButton from './components/CopyButton.jsx';
-import DownloadButton from './components/DownloadButton.jsx';
-import FileInfo from './components/FileInfo.jsx';
-import JsonPreview from './components/JsonPreview.jsx';
-import {
-  createCategoryJson,
-  toJsonString,
-} from './utils/jsonGenerator.js';
-import { getCategoryFileInfo } from './utils/filePaths.js';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -19,43 +11,6 @@ const navItems = [
   { to: '/new/strike', label: 'Novo strike' },
   { to: '/new/category', label: 'Nova categoria' },
 ];
-
-const generatorPages = {
-  category: {
-    title: 'Nova categoria',
-    entity: 'Category',
-    description: 'Agrupamento principal usado para organizar a biblioteca.',
-    filename: '{slug}.json',
-    path: 'data/categories/{slug}.json',
-    fields: ['Nome', 'Slug', 'Descricao', 'Cor'],
-  },
-};
-
-const generatorExamples = {
-  category: createCategoryExample(),
-};
-
-function createCategoryExample() {
-  const fileInfo = getCategoryFileInfo('Speculative Fiction');
-
-  return createExample(
-    createCategoryJson({
-      name: 'Speculative Fiction',
-      slug: fileInfo.slug,
-      description: 'Fiction that bends reality through imagined worlds, futures or rules.',
-      color: '#70B7FF',
-    }),
-    fileInfo
-  );
-}
-
-function createExample(data, fileInfo) {
-  return {
-    data,
-    fileInfo,
-    json: toJsonString(data),
-  };
-}
 
 function App() {
   return (
@@ -88,7 +43,7 @@ function App() {
           <Route path="book/:slug" element={<BookDetailPage />} />
           <Route path="new/book" element={<BookFormPage />} />
           <Route path="new/strike" element={<StrikeFormPage />} />
-          <Route path="new/category" element={<GeneratorPage type="category" />} />
+          <Route path="new/category" element={<CategoryFormPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
@@ -155,53 +110,6 @@ function BookDetailPage() {
       <section className="panel">
         <p className="panel-label">Slug selecionado</p>
         <code className="path-chip">{slug}</code>
-      </section>
-    </Page>
-  );
-}
-
-function GeneratorPage({ type }) {
-  const page = generatorPages[type];
-  const example = generatorExamples[type];
-
-  return (
-    <Page
-      eyebrow="Gerador"
-      title={page.title}
-      description={page.description}
-    >
-      <section className="generator-layout">
-        <article className="panel">
-          <p className="panel-label">Campos planejados</p>
-          <h2>{page.entity}</h2>
-          <ul className="field-list">
-            {page.fields.map((field) => (
-              <li key={field}>{field}</li>
-            ))}
-          </ul>
-        </article>
-
-        <aside className="panel panel-compact generation-preview">
-          <p className="panel-label">Amostra JSON</p>
-          <dl className="file-summary">
-            <div>
-              <dt>Modelo</dt>
-              <dd>{page.filename}</dd>
-            </div>
-            <div>
-              <dt>Destino</dt>
-              <dd>
-                <code className="path-chip">{page.path}</code>
-              </dd>
-            </div>
-          </dl>
-          <FileInfo {...example.fileInfo} />
-          <div className="file-actions" aria-label={`Acoes para ${example.fileInfo.fileName}`}>
-            <CopyButton text={example.json} />
-            <DownloadButton content={example.json} fileName={example.fileInfo.fileName} />
-          </div>
-          <JsonPreview json={example.json} title={`${page.entity} JSON`} />
-        </aside>
       </section>
     </Page>
   );
