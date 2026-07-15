@@ -162,11 +162,13 @@ reading-progress-engine/
         |   |-- DownloadButton.jsx
         |   |-- FileInfo.jsx
         |   |-- JsonPreview.jsx
+        |   |-- LibraryFilterControls.jsx
         |   |-- LibraryGrid.jsx
         |   `-- LibrarySortControls.jsx
         |-- pages/
         |-- styles/
         `-- utils/
+            |-- libraryFilters.js
             |-- libraryLoader.js
             |-- libraryMetrics.js
             `-- librarySorting.js

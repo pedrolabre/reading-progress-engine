@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
+import LibraryFilterControls from './components/LibraryFilterControls.jsx';
 import LibraryGrid from './components/LibraryGrid.jsx';
 import LibrarySortControls from './components/LibrarySortControls.jsx';
 import BookFormPage from './pages/BookFormPage.jsx';
@@ -11,6 +12,14 @@ import {
   createLibraryLoadingState,
   loadLibraryData,
 } from './utils/libraryLoader.js';
+import {
+  countActiveLibraryFilters,
+  createEmptyLibraryFilters,
+  createLibraryFilterOptions,
+  filterLibraryBooks,
+  normalizeLibraryFilters,
+  toggleLibraryFilterValue,
+} from './utils/libraryFilters.js';
 import { createLibraryMetrics } from './utils/libraryMetrics.js';
 import {
   DEFAULT_LIBRARY_SORT_ID,
@@ -68,10 +77,21 @@ function App() {
 function LibraryPage() {
   const [libraryState, setLibraryState] = useState(() => createLibraryLoadingState());
   const [librarySortId, setLibrarySortId] = useState(DEFAULT_LIBRARY_SORT_ID);
+  const [libraryFilters, setLibraryFilters] = useState(() => createEmptyLibraryFilters());
 
   useEffect(() => {
     setLibraryState(loadLibraryData());
   }, []);
+
+  function handleLibraryFilterToggle(groupId, value) {
+    setLibraryFilters((currentFilters) =>
+      toggleLibraryFilterValue(currentFilters, groupId, value)
+    );
+  }
+
+  function handleLibraryFiltersClear() {
+    setLibraryFilters(createEmptyLibraryFilters());
+  }
 
   return (
     <Page
@@ -90,15 +110,25 @@ function LibraryPage() {
       }
     >
       <LibraryView
+        libraryFilters={libraryFilters}
         libraryState={libraryState}
         librarySortId={librarySortId}
+        onLibraryFilterToggle={handleLibraryFilterToggle}
+        onLibraryFiltersClear={handleLibraryFiltersClear}
         onLibrarySortChange={setLibrarySortId}
       />
     </Page>
   );
 }
 
-function LibraryView({ libraryState, librarySortId, onLibrarySortChange }) {
+function LibraryView({
+  libraryFilters,
+  libraryState,
+  librarySortId,
+  onLibraryFilterToggle,
+  onLibraryFiltersClear,
+  onLibrarySortChange,
+}) {
   if (libraryState.status === LIBRARY_LOAD_STATUS.LOADING) {
     return (
       <section className="library-surface library-state" aria-live="polite" aria-busy="true">
@@ -136,7 +166,11 @@ function LibraryView({ libraryState, librarySortId, onLibrarySortChange }) {
   const runtimeMetrics = createLibraryMetrics(data);
   const warnings = [...data.warnings, ...runtimeMetrics.warnings];
   const activeSortOption = getLibrarySortOption(librarySortId);
-  const sortedBooks = sortLibraryBooks(runtimeMetrics.books, activeSortOption.id);
+  const activeFilters = normalizeLibraryFilters(libraryFilters);
+  const activeFilterCount = countActiveLibraryFilters(activeFilters);
+  const filterOptions = createLibraryFilterOptions(runtimeMetrics.books);
+  const filteredBooks = filterLibraryBooks(runtimeMetrics.books, activeFilters);
+  const sortedBooks = sortLibraryBooks(filteredBooks, activeSortOption.id);
 
   return (
     <section className="library-surface" aria-labelledby="library-grid-title">
@@ -174,9 +208,42 @@ function LibraryView({ libraryState, librarySortId, onLibrarySortChange }) {
         </div>
       </dl>
 
-      <LibraryGrid books={sortedBooks} />
+      {runtimeMetrics.books.length > 0 ? (
+        <LibraryFilterControls
+          activeFilterCount={activeFilterCount}
+          filters={activeFilters}
+          groups={filterOptions}
+          resultCount={filteredBooks.length}
+          totalCount={runtimeMetrics.books.length}
+          onClearFilters={onLibraryFiltersClear}
+          onToggleFilter={onLibraryFilterToggle}
+        />
+      ) : null}
+
+      {sortedBooks.length === 0 && activeFilterCount > 0 ? (
+        <LibraryNoFilterMatches onClearFilters={onLibraryFiltersClear} />
+      ) : (
+        <LibraryGrid books={sortedBooks} />
+      )}
       {warnings.length > 0 ? <RuntimeWarnings warnings={warnings} /> : null}
     </section>
+  );
+}
+
+function LibraryNoFilterMatches({ onClearFilters }) {
+  return (
+    <div className="library-filter-empty-state" role="status">
+      <span className="library-empty-mark" aria-hidden="true">
+        0
+      </span>
+      <div>
+        <h3>Nenhuma correspondencia</h3>
+        <p>Os filtros ativos nao retornaram livros neste acervo.</p>
+      </div>
+      <button className="button-link button-link-primary" type="button" onClick={onClearFilters}>
+        Limpar filtros
+      </button>
+    </div>
   );
 }
 

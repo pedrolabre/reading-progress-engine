@@ -452,6 +452,136 @@ p {
   font-weight: 900;
 }
 
+.library-filter-controls {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: var(--color-surface-muted);
+  box-shadow: 4px 4px 0 var(--color-shadow);
+}
+
+.library-filter-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.library-filter-toolbar h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.library-filter-toolbar p {
+  margin: 4px 0 0;
+  color: var(--color-text);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.library-filter-toolbar .button-link {
+  min-height: 34px;
+  padding-right: 10px;
+  padding-left: 10px;
+  background: var(--color-surface);
+  font-size: 0.85rem;
+}
+
+.library-filter-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.library-filter-group {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-2);
+  margin: 0;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  background: var(--color-surface);
+  box-shadow: 3px 3px 0 var(--color-shadow);
+}
+
+.library-filter-group legend {
+  padding: 0 4px;
+  color: var(--color-text);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.library-filter-options {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.library-filter-option {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  background: var(--color-surface-muted);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.library-filter-option.is-active {
+  background: var(--color-accent);
+}
+
+.library-filter-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-accent-strong);
+}
+
+.library-filter-option span {
+  min-width: 0;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.library-filter-option small {
+  color: var(--color-muted);
+  font-size: 0.63rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.library-filter-empty-option {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
 .library-totals {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -786,6 +916,18 @@ p {
   background: var(--color-accent-soft);
 }
 
+.library-filter-empty-state {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 180px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  background: var(--color-warm-soft);
+}
+
 .library-empty-mark {
   display: grid;
   width: 52px;
@@ -807,7 +949,19 @@ p {
   text-transform: uppercase;
 }
 
+.library-filter-empty-state h3 {
+  margin: 0 0 5px;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
 .library-empty p {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.library-filter-empty-state p {
   margin: 0;
   color: var(--color-text);
 }
@@ -1231,6 +1385,10 @@ p {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .library-filter-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .library-state {
     grid-template-columns: 1fr;
   }
@@ -1256,15 +1414,18 @@ p {
   }
 
   .metric-row,
-  .loader-summary,
-  .library-section-header,
-  .library-totals,
-  .library-grid,
-  .library-empty,
-  .field-list,
-  .form-grid,
-  .slug-preview,
-  .color-control-row {
+    .loader-summary,
+    .library-section-header,
+    .library-filter-toolbar,
+    .library-filter-groups,
+    .library-totals,
+    .library-grid,
+    .library-empty,
+    .library-filter-empty-state,
+    .field-list,
+    .form-grid,
+    .slug-preview,
+    .color-control-row {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1291,6 +1452,10 @@ p {
   }
 
   .library-empty {
+    justify-items: start;
+  }
+
+  .library-filter-empty-state {
     justify-items: start;
   }
 }
