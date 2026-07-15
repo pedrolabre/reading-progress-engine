@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
+import LibraryGrid from './components/LibraryGrid.jsx';
 import BookFormPage from './pages/BookFormPage.jsx';
 import CategoryFormPage from './pages/CategoryFormPage.jsx';
 import StrikeFormPage from './pages/StrikeFormPage.jsx';
@@ -67,8 +68,8 @@ function LibraryPage() {
   return (
     <Page
       eyebrow="Biblioteca"
-      title="Dados da biblioteca"
-      description="Primeira leitura dos JSONs versionados para preparar a biblioteca visual."
+      title="Sua biblioteca"
+      description="Acompanhe cada leitura a partir dos JSONs versionados no seu repositorio."
       actions={
         <>
           <Link className="button-link button-link-primary" to="/new/book">
@@ -80,32 +81,26 @@ function LibraryPage() {
         </>
       }
     >
-      <section className="content-grid" aria-label="Estado da biblioteca">
-        <LibraryLoaderPanel libraryState={libraryState} />
-
-        <aside className="panel panel-compact" aria-label="Acoes principais">
-          <p className="panel-label">Geracao</p>
-          <h2>Arquivos JSON</h2>
-          <RouteList />
-        </aside>
-      </section>
+      <LibraryView libraryState={libraryState} />
     </Page>
   );
 }
 
-function LibraryLoaderPanel({ libraryState }) {
+function LibraryView({ libraryState }) {
   if (libraryState.status === LIBRARY_LOAD_STATUS.LOADING) {
     return (
-      <article className="panel panel-feature loader-panel" aria-live="polite">
-        <p className="panel-label">Data loader</p>
-        <h2>Carregando JSONs</h2>
-        <p>Preparando a leitura local dos arquivos versionados.</p>
-        <div className="metric-row" aria-label="Contagens aguardando dados">
-          <MetricCard value="..." label="livros" />
-          <MetricCard value="..." label="categorias" />
-          <MetricCard value="..." label="strikes" />
+      <section className="library-surface library-state" aria-live="polite" aria-busy="true">
+        <div>
+          <p className="panel-label">Biblioteca local</p>
+          <h2>Carregando livros</h2>
+          <p>Preparando os dados versionados para montar a biblioteca.</p>
         </div>
-      </article>
+        <div className="library-loading-grid" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+        </div>
+      </section>
     );
   }
 
@@ -113,75 +108,73 @@ function LibraryLoaderPanel({ libraryState }) {
     const details = libraryState.error?.details || [];
 
     return (
-      <article className="panel panel-feature loader-panel loader-panel-error" role="alert">
-        <p className="panel-label">Data loader</p>
-        <h2>Dados indisponiveis</h2>
-        <p>{libraryState.error?.message || 'Nao foi possivel carregar a biblioteca.'}</p>
-        {details.length > 0 ? (
-          <ul className="loader-list">
-            {details.map((detail) => (
-              <li key={detail}>{detail}</li>
-            ))}
-          </ul>
-        ) : null}
-      </article>
+      <section className="library-surface library-state library-state-error" role="alert">
+        <div>
+          <p className="panel-label">Biblioteca local</p>
+          <h2>Dados indisponiveis</h2>
+          <p>{libraryState.error?.message || 'Nao foi possivel carregar a biblioteca.'}</p>
+          <p>Revise os arquivos JSON indicados e recarregue a pagina.</p>
+        </div>
+        {details.length > 0 ? <WarningList warnings={details} /> : null}
+      </section>
     );
   }
 
   const data = libraryState.data;
-  const summary = data.summary;
   const runtimeMetrics = createLibraryMetrics(data);
+  const warnings = [...data.warnings, ...runtimeMetrics.warnings];
 
   return (
-    <article className="panel panel-feature loader-panel" aria-live="polite">
-      <p className="panel-label">Data loader</p>
-      <h2>JSONs carregados</h2>
-      <p>
-        Books, categories, strikes e library estao normalizados para os proximos
-        blocos da visualizacao.
-      </p>
-
-      <div className="metric-row" aria-label="Dados carregados">
-        <MetricCard value={summary.totalBooks} label="livros" />
-        <MetricCard value={summary.totalCategories} label="categorias" />
-        <MetricCard value={summary.totalStrikes} label="strikes" />
-      </div>
-
-      <dl className="loader-summary">
+    <section className="library-surface" aria-labelledby="library-grid-title">
+      <header className="library-section-header">
         <div>
-          <dt>Estrategia</dt>
-          <dd>{data.source.strategy}</dd>
+          <p className="panel-label">Acervo local</p>
+          <h2 id="library-grid-title">Livros registrados</h2>
+          <p>Progresso e atividade calculados a partir dos seus strikes.</p>
         </div>
-        <div>
-          <dt>Library</dt>
-          <dd>{summary.generatedAt}</dd>
+        <div className="library-context" aria-label="Contexto da biblioteca">
+          <span>{formatBookCount(runtimeMetrics.summary.totalBooks)}</span>
+          <span>Ordem inicial</span>
         </div>
-        <div>
-          <dt>Avisos</dt>
-          <dd>{summary.warningCount}</dd>
-        </div>
-      </dl>
+      </header>
 
-      <dl className="loader-summary" aria-label="Metricas calculadas em runtime">
+      <dl className="library-totals" aria-label="Resumo da biblioteca">
+        <div>
+          <dt>Strikes</dt>
+          <dd>{runtimeMetrics.summary.totalStrikes}</dd>
+        </div>
         <div>
           <dt>Paginas lidas</dt>
           <dd>{runtimeMetrics.summary.totalPagesRead}</dd>
         </div>
         <div>
-          <dt>Atividade</dt>
-          <dd>
-            {formatActivityRange(
-              runtimeMetrics.summary.firstActivityDate,
-              runtimeMetrics.summary.lastActivityDate
-            )}
-          </dd>
-        </div>
-        <div>
-          <dt>Avisos runtime</dt>
-          <dd>{runtimeMetrics.summary.warningCount}</dd>
+          <dt>Categorias</dt>
+          <dd>{runtimeMetrics.summary.totalCategories}</dd>
         </div>
       </dl>
-    </article>
+
+      <LibraryGrid books={runtimeMetrics.books} />
+      {warnings.length > 0 ? <RuntimeWarnings warnings={warnings} /> : null}
+    </section>
+  );
+}
+
+function RuntimeWarnings({ warnings }) {
+  return (
+    <details className="runtime-warnings">
+      <summary>{formatWarningCount(warnings.length)}</summary>
+      <WarningList warnings={warnings} />
+    </details>
+  );
+}
+
+function WarningList({ warnings }) {
+  return (
+    <ul className="loader-list">
+      {warnings.map((warning) => (
+        <li key={warning}>{warning}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -192,7 +185,7 @@ function BookDetailPage() {
     <Page
       eyebrow="Livro"
       title="Detalhe do livro"
-      description="Rota preparada para receber metadados, metricas e timeline quando a visualizacao da biblioteca for implementada."
+      description="Rota reservada para metadados, metricas e timeline. O detalhe permanece como placeholder nesta etapa."
       actions={
         <Link className="button-link" to="/new/strike">
           Novo strike
@@ -255,21 +248,12 @@ function RouteList() {
   );
 }
 
-function MetricCard({ value, label }) {
-  return (
-    <div className="metric-card">
-      <strong>{value}</strong>
-      <span>{label}</span>
-    </div>
-  );
+function formatBookCount(count) {
+  return count === 1 ? '1 livro' : `${count} livros`;
 }
 
-function formatActivityRange(firstDate, lastDate) {
-  if (firstDate && lastDate && firstDate !== lastDate) {
-    return `${firstDate} ate ${lastDate}`;
-  }
-
-  return firstDate || lastDate || 'sem atividade';
+function formatWarningCount(count) {
+  return count === 1 ? '1 aviso de dados' : `${count} avisos de dados`;
 }
 
 export default App;

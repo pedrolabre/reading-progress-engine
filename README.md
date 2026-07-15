@@ -157,6 +157,12 @@ reading-progress-engine/
     `-- src/
         |-- App.jsx
         |-- components/
+        |   |-- BookCard.jsx
+        |   |-- CopyButton.jsx
+        |   |-- DownloadButton.jsx
+        |   |-- FileInfo.jsx
+        |   |-- JsonPreview.jsx
+        |   `-- LibraryGrid.jsx
         |-- pages/
         |-- styles/
         `-- utils/
