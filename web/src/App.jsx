@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router';
 
 import BookFormPage from './pages/BookFormPage.jsx';
 import CategoryFormPage from './pages/CategoryFormPage.jsx';
 import StrikeFormPage from './pages/StrikeFormPage.jsx';
+import {
+  LIBRARY_LOAD_STATUS,
+  createLibraryLoadingState,
+  loadLibraryData,
+} from './utils/libraryLoader.js';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -52,11 +57,17 @@ function App() {
 }
 
 function LibraryPage() {
+  const [libraryState, setLibraryState] = useState(() => createLibraryLoadingState());
+
+  useEffect(() => {
+    setLibraryState(loadLibraryData());
+  }, []);
+
   return (
     <Page
       eyebrow="Biblioteca"
-      title="Historico de leitura em dados"
-      description="A home fica reservada para a biblioteca visual do MVP, mantendo os dados no repositorio e o commit sob controle manual."
+      title="Dados da biblioteca"
+      description="Primeira leitura dos JSONs versionados para preparar a biblioteca visual."
       actions={
         <>
           <Link className="button-link button-link-primary" to="/new/book">
@@ -68,20 +79,8 @@ function LibraryPage() {
         </>
       }
     >
-      <section className="content-grid" aria-label="Areas da biblioteca">
-        <article className="panel panel-feature">
-          <p className="panel-label">Biblioteca</p>
-          <h2>Base pronta para cards de livros</h2>
-          <p>
-            O espaco principal ja acomoda estado vazio, resumo e futuras listas
-            de livros sem depender de backend ou conta.
-          </p>
-          <div className="metric-row" aria-label="Rotas preparadas">
-            <MetricCard value="5" label="rotas do MVP" />
-            <MetricCard value="3" label="geradores" />
-            <MetricCard value="0" label="salvamentos automaticos" />
-          </div>
-        </article>
+      <section className="content-grid" aria-label="Estado da biblioteca">
+        <LibraryLoaderPanel libraryState={libraryState} />
 
         <aside className="panel panel-compact" aria-label="Acoes principais">
           <p className="panel-label">Geracao</p>
@@ -90,6 +89,77 @@ function LibraryPage() {
         </aside>
       </section>
     </Page>
+  );
+}
+
+function LibraryLoaderPanel({ libraryState }) {
+  if (libraryState.status === LIBRARY_LOAD_STATUS.LOADING) {
+    return (
+      <article className="panel panel-feature loader-panel" aria-live="polite">
+        <p className="panel-label">Data loader</p>
+        <h2>Carregando JSONs</h2>
+        <p>Preparando a leitura local dos arquivos versionados.</p>
+        <div className="metric-row" aria-label="Contagens aguardando dados">
+          <MetricCard value="..." label="livros" />
+          <MetricCard value="..." label="categorias" />
+          <MetricCard value="..." label="strikes" />
+        </div>
+      </article>
+    );
+  }
+
+  if (libraryState.status === LIBRARY_LOAD_STATUS.ERROR) {
+    const details = libraryState.error?.details || [];
+
+    return (
+      <article className="panel panel-feature loader-panel loader-panel-error" role="alert">
+        <p className="panel-label">Data loader</p>
+        <h2>Dados indisponiveis</h2>
+        <p>{libraryState.error?.message || 'Nao foi possivel carregar a biblioteca.'}</p>
+        {details.length > 0 ? (
+          <ul className="loader-list">
+            {details.map((detail) => (
+              <li key={detail}>{detail}</li>
+            ))}
+          </ul>
+        ) : null}
+      </article>
+    );
+  }
+
+  const data = libraryState.data;
+  const summary = data.summary;
+
+  return (
+    <article className="panel panel-feature loader-panel" aria-live="polite">
+      <p className="panel-label">Data loader</p>
+      <h2>JSONs carregados</h2>
+      <p>
+        Books, categories, strikes e library estao normalizados para os proximos
+        blocos da visualizacao.
+      </p>
+
+      <div className="metric-row" aria-label="Dados carregados">
+        <MetricCard value={summary.totalBooks} label="livros" />
+        <MetricCard value={summary.totalCategories} label="categorias" />
+        <MetricCard value={summary.totalStrikes} label="strikes" />
+      </div>
+
+      <dl className="loader-summary">
+        <div>
+          <dt>Estrategia</dt>
+          <dd>{data.source.strategy}</dd>
+        </div>
+        <div>
+          <dt>Library</dt>
+          <dd>{summary.generatedAt}</dd>
+        </div>
+        <div>
+          <dt>Avisos</dt>
+          <dd>{summary.warningCount}</dd>
+        </div>
+      </dl>
+    </article>
   );
 }
 

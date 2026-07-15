@@ -308,6 +308,62 @@ p {
   line-height: 1.35;
 }
 
+.loader-panel {
+  gap: var(--space-4);
+}
+
+.loader-panel-error {
+  background: var(--color-secondary-soft);
+}
+
+.loader-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin: 16px 0 0;
+}
+
+.loader-summary div,
+.loader-list li {
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 9px 10px;
+  background: var(--color-surface);
+  box-shadow: 3px 3px 0 var(--color-shadow);
+}
+
+.loader-summary dt {
+  color: var(--color-text);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.loader-summary dd {
+  min-width: 0;
+  margin: 4px 0 0;
+  color: var(--color-text);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.loader-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.loader-list li {
+  color: var(--color-text);
+  font-size: 0.88rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
 .route-list,
 .field-list {
   display: grid;
@@ -699,6 +755,7 @@ p {
   }
 
   .metric-row,
+  .loader-summary,
   .field-list,
   .form-grid,
   .slug-preview,
