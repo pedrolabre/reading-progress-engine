@@ -1,30 +1,9 @@
 import libraryJson from '../../../data/library.json' with { type: 'json' };
 
 import {
-  createBookSourceEntry,
-  createCategorySourceEntry,
-  createStrikeSourceEntry,
+  createLibrarySourceFromModuleMaps,
   isValidLibrarySlug,
 } from './libraryDiscovery.js';
-
-import atomicHabitsBook from '../../../data/books/atomic-habits.json' with { type: 'json' };
-import duneBook from '../../../data/books/dune.json' with { type: 'json' };
-import theWayOfKingsBook from '../../../data/books/the-way-of-kings.json' with { type: 'json' };
-
-import fantasyCategory from '../../../data/categories/fantasy.json' with { type: 'json' };
-import nonFictionCategory from '../../../data/categories/non-fiction.json' with { type: 'json' };
-import scienceFictionCategory from '../../../data/categories/science-fiction.json' with { type: 'json' };
-
-import atomicHabitsStrike20260403 from '../../../data/strikes/atomic-habits/2026-04-03.json' with { type: 'json' };
-import atomicHabitsStrike20260408 from '../../../data/strikes/atomic-habits/2026-04-08.json' with { type: 'json' };
-import duneStrike20260105 from '../../../data/strikes/dune/2026-01-05.json' with { type: 'json' };
-import duneStrike20260112 from '../../../data/strikes/dune/2026-01-12.json' with { type: 'json' };
-import duneStrike20260120 from '../../../data/strikes/dune/2026-01-20.json' with { type: 'json' };
-import duneStrike20260202 from '../../../data/strikes/dune/2026-02-02.json' with { type: 'json' };
-import theWayOfKingsStrike20260210 from '../../../data/strikes/the-way-of-kings/2026-02-10.json' with { type: 'json' };
-import theWayOfKingsStrike20260214 from '../../../data/strikes/the-way-of-kings/2026-02-14.json' with { type: 'json' };
-import theWayOfKingsStrike20260301 from '../../../data/strikes/the-way-of-kings/2026-03-01.json' with { type: 'json' };
-import theWayOfKingsStrike20260315 from '../../../data/strikes/the-way-of-kings/2026-03-15.json' with { type: 'json' };
 
 export const LIBRARY_LOAD_STATUS = {
   LOADING: 'loading',
@@ -32,53 +11,31 @@ export const LIBRARY_LOAD_STATUS = {
   ERROR: 'error',
 };
 
-const STATIC_LIBRARY_SOURCE = {
-  strategy: 'vite-static-json-imports',
-  books: [
-    createBookSourceEntry('data/books/atomic-habits.json', atomicHabitsBook),
-    createBookSourceEntry('data/books/dune.json', duneBook),
-    createBookSourceEntry('data/books/the-way-of-kings.json', theWayOfKingsBook),
-  ],
-  categories: [
-    createCategorySourceEntry('data/categories/fantasy.json', fantasyCategory),
-    createCategorySourceEntry('data/categories/non-fiction.json', nonFictionCategory),
-    createCategorySourceEntry('data/categories/science-fiction.json', scienceFictionCategory),
-  ],
-  strikes: [
-    createStrikeSourceEntry(
-      'data/strikes/atomic-habits/2026-04-03.json',
-      atomicHabitsStrike20260403
-    ),
-    createStrikeSourceEntry(
-      'data/strikes/atomic-habits/2026-04-08.json',
-      atomicHabitsStrike20260408
-    ),
-    createStrikeSourceEntry('data/strikes/dune/2026-01-05.json', duneStrike20260105),
-    createStrikeSourceEntry('data/strikes/dune/2026-01-12.json', duneStrike20260112),
-    createStrikeSourceEntry('data/strikes/dune/2026-01-20.json', duneStrike20260120),
-    createStrikeSourceEntry('data/strikes/dune/2026-02-02.json', duneStrike20260202),
-    createStrikeSourceEntry(
-      'data/strikes/the-way-of-kings/2026-02-10.json',
-      theWayOfKingsStrike20260210
-    ),
-    createStrikeSourceEntry(
-      'data/strikes/the-way-of-kings/2026-02-14.json',
-      theWayOfKingsStrike20260214
-    ),
-    createStrikeSourceEntry(
-      'data/strikes/the-way-of-kings/2026-03-01.json',
-      theWayOfKingsStrike20260301
-    ),
-    createStrikeSourceEntry(
-      'data/strikes/the-way-of-kings/2026-03-15.json',
-      theWayOfKingsStrike20260315
-    ),
-  ],
+const bookModules = import.meta.glob('../../../data/books/*.json', {
+  eager: true,
+  import: 'default',
+});
+
+const categoryModules = import.meta.glob('../../../data/categories/*.json', {
+  eager: true,
+  import: 'default',
+});
+
+const strikeModules = import.meta.glob('../../../data/strikes/**/*.json', {
+  eager: true,
+  import: 'default',
+});
+
+const AUTOMATIC_LIBRARY_SOURCE = createLibrarySourceFromModuleMaps({
+  strategy: 'vite-import-meta-glob',
+  books: bookModules,
+  categories: categoryModules,
+  strikes: strikeModules,
   library: {
-    path: 'data/library.json',
+    path: '../../../data/library.json',
     data: libraryJson,
   },
-};
+});
 
 export function createLibraryLoadingState() {
   return {
@@ -88,7 +45,7 @@ export function createLibraryLoadingState() {
   };
 }
 
-export function loadLibraryData(source = STATIC_LIBRARY_SOURCE) {
+export function loadLibraryData(source = AUTOMATIC_LIBRARY_SOURCE) {
   try {
     return {
       status: LIBRARY_LOAD_STATUS.SUCCESS,
