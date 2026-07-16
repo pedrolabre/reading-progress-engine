@@ -1,57 +1,11 @@
 {
-  "generatedAt": "2026-04-08T00:00:00Z",
-  "totalBooks": 3,
-  "totalPagesRead": 753,
-  "booksCompleted": 1,
-  "booksReading": 1,
-  "booksPaused": 1,
+  "generatedAt": "1970-01-01T00:00:00Z",
+  "totalBooks": 0,
+  "totalPagesRead": 0,
+  "booksCompleted": 0,
+  "booksReading": 0,
+  "booksPaused": 0,
   "booksToRead": 0,
   "booksDropped": 0,
-  "books": [
-    {
-      "slug": "atomic-habits",
-      "title": "Atomic Habits",
-      "author": "James Clear",
-      "category": "non-fiction",
-      "status": "paused",
-      "totalPages": 320,
-      "currentPage": 96,
-      "progress": 30,
-      "totalStrikes": 2,
-      "totalPagesRead": 96,
-      "firstStrike": "2026-04-03",
-      "lastStrike": "2026-04-08",
-      "averagePagesPerStrike": 48
-    },
-    {
-      "slug": "dune",
-      "title": "Dune",
-      "author": "Frank Herbert",
-      "category": "science-fiction",
-      "status": "completed",
-      "totalPages": 412,
-      "currentPage": 412,
-      "progress": 100,
-      "totalStrikes": 4,
-      "totalPagesRead": 412,
-      "firstStrike": "2026-01-05",
-      "lastStrike": "2026-02-02",
-      "averagePagesPerStrike": 103
-    },
-    {
-      "slug": "the-way-of-kings",
-      "title": "The Way of Kings",
-      "author": "Brandon Sanderson",
-      "category": "fantasy",
-      "status": "reading",
-      "totalPages": 1007,
-      "currentPage": 245,
-      "progress": 24.33,
-      "totalStrikes": 4,
-      "totalPagesRead": 245,
-      "firstStrike": "2026-02-10",
-      "lastStrike": "2026-03-15",
-      "averagePagesPerStrike": 61.3
-    }
-  ]
+  "books": []
 }
