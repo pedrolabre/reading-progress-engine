@@ -141,6 +141,9 @@ Isso é intencional. A aplicação web **não** faz push no GitHub. Ela gera arq
 
 ```
 reading-progress-engine/
+|-- .github/
+|   `-- workflows/
+|       `-- validate.yml
 |-- README.md
 |-- data/
 |   |-- books/
