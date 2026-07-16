@@ -42,7 +42,15 @@ function BookTimeline({ entries = [], title }) {
                 </header>
 
                 <div className="book-timeline-progress">
-                  <div className="book-progress-track" aria-hidden="true">
+                  <div
+                    className="book-progress-track"
+                    role="progressbar"
+                    aria-label={`Progresso depois do strike de ${entry.dateLabel}`}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={entry.progressValue}
+                    aria-valuetext={entry.progressLabel}
+                  >
                     <span
                       className="book-progress-value"
                       style={{ '--progress-value': `${entry.progressValue}%` }}

@@ -75,11 +75,11 @@ function CategoryFormPage() {
   }
 
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="category-form-page-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Category</p>
-          <h1>Nova categoria</h1>
+          <h1 id="category-form-page-title">Nova categoria</h1>
           <p className="page-description">
             Gere um arquivo JSON de categoria com slug, cor, preview e destino
             prontos para commit manual.
@@ -88,10 +88,15 @@ function CategoryFormPage() {
       </div>
 
       <section className="category-form-layout" aria-label="Formulario de categoria">
-        <form className="panel category-form-panel" noValidate onSubmit={handleSubmit}>
+        <form
+          className="panel category-form-panel"
+          noValidate
+          aria-labelledby="category-form-title"
+          onSubmit={handleSubmit}
+        >
           <div className="form-section-heading">
             <p className="panel-label">Formulario</p>
-            <h2>Classificacao</h2>
+            <h2 id="category-form-title">Classificacao</h2>
           </div>
 
           <div className="slug-preview" aria-live="polite">
@@ -169,8 +174,13 @@ function CategoryFormPage() {
           </div>
         </form>
 
-        <aside className="panel panel-compact generation-preview category-preview-panel">
-          <p className="panel-label">Saida</p>
+        <aside
+          className="panel panel-compact generation-preview category-preview-panel"
+          aria-labelledby="category-output-title"
+        >
+          <h2 className="panel-label" id="category-output-title">
+            Saida
+          </h2>
           <dl className="file-summary">
             <div>
               <dt>Modelo</dt>
@@ -224,7 +234,12 @@ function Field({ children, error, hint, id, label, required = false, wide = fals
     <div className={wide ? 'form-field form-field-wide' : 'form-field'}>
       <label htmlFor={id}>
         {label}
-        {required ? <span aria-label="obrigatorio">*</span> : null}
+        {required ? (
+          <>
+            <span aria-hidden="true">*</span>
+            <span className="visually-hidden">obrigatorio</span>
+          </>
+        ) : null}
       </label>
       {control}
       {hint ? (
@@ -265,7 +280,7 @@ function ColorField({ error, onBlur, onChange, value }) {
           value={value}
         />
         <input
-          aria-label="Escolher cor"
+          aria-label="Escolher cor da categoria"
           className="color-picker"
           onChange={(event) => onChange(event.target.value)}
           type="color"

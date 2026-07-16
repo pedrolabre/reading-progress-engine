@@ -3,11 +3,14 @@ import React from 'react';
 function BookDetail({ detail }) {
   return (
     <div className="book-detail-layout">
-      <section className={`book-detail-summary book-detail-status-${detail.status.value}`}>
+      <section
+        className={`book-detail-summary book-detail-status-${detail.status.value}`}
+        aria-labelledby="book-detail-summary-title"
+      >
         <header className="book-detail-section-header">
           <div>
             <p className="panel-label">Resumo do livro</p>
-            <h2>Progresso registrado</h2>
+            <h2 id="book-detail-summary-title">Progresso registrado</h2>
           </div>
           <div className="book-detail-badges">
             <span className={`book-badge book-status book-status-${detail.status.value}`}>
@@ -56,11 +59,11 @@ function BookDetail({ detail }) {
         </dl>
       </section>
 
-      <section className="book-detail-panel">
+      <section className="book-detail-panel" aria-labelledby="book-detail-metadata-title">
         <header className="book-detail-section-header">
           <div>
             <p className="panel-label">Metadados</p>
-            <h2>Dados do JSON</h2>
+            <h2 id="book-detail-metadata-title">Dados do JSON</h2>
           </div>
         </header>
         <dl className="book-detail-metadata">
@@ -81,11 +84,11 @@ function BookDetail({ detail }) {
         </dl>
       </section>
 
-      <section className="book-detail-panel">
+      <section className="book-detail-panel" aria-labelledby="book-detail-classification-title">
         <header className="book-detail-section-header">
           <div>
             <p className="panel-label">Classificacao</p>
-            <h2>Generos e tags</h2>
+            <h2 id="book-detail-classification-title">Generos e tags</h2>
           </div>
         </header>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import { Link, NavLink, Route, Routes } from 'react-router';
 
 import LibraryFilterControls from './components/LibraryFilterControls.jsx';
@@ -39,6 +39,10 @@ const navItems = [
 function App() {
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#conteudo-principal">
+        Pular para o conteudo principal
+      </a>
+
       <header className="site-header">
         <Link className="brand" to="/" aria-label="Reading Progress Engine - Biblioteca">
           <span className="brand-name">Reading Progress Engine</span>
@@ -61,7 +65,7 @@ function App() {
         </nav>
       </header>
 
-      <main className="main-content">
+      <main className="main-content" id="conteudo-principal">
         <Routes>
           <Route index element={<LibraryPage />} />
           <Route path="book/:slug" element={<BookDetailPage />} />
@@ -132,10 +136,15 @@ function LibraryView({
 }) {
   if (libraryState.status === LIBRARY_LOAD_STATUS.LOADING) {
     return (
-      <section className="library-surface library-state" aria-live="polite" aria-busy="true">
+      <section
+        className="library-surface library-state"
+        aria-labelledby="library-loading-title"
+        aria-live="polite"
+        aria-busy="true"
+      >
         <div>
           <p className="panel-label">Biblioteca local</p>
-          <h2>Carregando livros</h2>
+          <h2 id="library-loading-title">Carregando livros</h2>
           <p>Preparando os dados versionados para montar a biblioteca.</p>
         </div>
         <div className="library-loading-grid" aria-hidden="true">
@@ -151,10 +160,14 @@ function LibraryView({
     const details = libraryState.error?.details || [];
 
     return (
-      <section className="library-surface library-state library-state-error" role="alert">
+      <section
+        className="library-surface library-state library-state-error"
+        role="alert"
+        aria-labelledby="library-error-title"
+      >
         <div>
           <p className="panel-label">Biblioteca local</p>
-          <h2>Dados indisponiveis</h2>
+          <h2 id="library-error-title">Dados indisponiveis</h2>
           <p>{libraryState.error?.message || 'Nao foi possivel carregar a biblioteca.'}</p>
           <p>Revise os arquivos JSON indicados e recarregue a pagina.</p>
         </div>
@@ -221,11 +234,13 @@ function LibraryView({
         />
       ) : null}
 
-      {sortedBooks.length === 0 && activeFilterCount > 0 ? (
-        <LibraryNoFilterMatches onClearFilters={onLibraryFiltersClear} />
-      ) : (
-        <LibraryGrid books={sortedBooks} />
-      )}
+      <div className="library-results" id="library-results">
+        {sortedBooks.length === 0 && activeFilterCount > 0 ? (
+          <LibraryNoFilterMatches onClearFilters={onLibraryFiltersClear} />
+        ) : (
+          <LibraryGrid books={sortedBooks} />
+        )}
+      </div>
       {warnings.length > 0 ? <RuntimeWarnings warnings={warnings} /> : null}
     </section>
   );
@@ -241,7 +256,12 @@ function LibraryNoFilterMatches({ onClearFilters }) {
         <h3>Nenhuma correspondencia</h3>
         <p>Os filtros ativos nao retornaram livros neste acervo.</p>
       </div>
-      <button className="button-link button-link-primary" type="button" onClick={onClearFilters}>
+      <button
+        className="button-link button-link-primary"
+        type="button"
+        aria-controls="library-results"
+        onClick={onClearFilters}
+      >
         Limpar filtros
       </button>
     </div>
@@ -288,12 +308,14 @@ function NotFoundPage() {
 }
 
 function Page({ eyebrow, title, description, actions, children }) {
+  const titleId = useId();
+
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby={titleId}>
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">{eyebrow}</p>
-          <h1>{title}</h1>
+          <h1 id={titleId}>{title}</h1>
           {description ? <p className="page-description">{description}</p> : null}
         </div>
         {actions ? <div className="page-actions">{actions}</div> : null}

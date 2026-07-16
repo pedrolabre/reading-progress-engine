@@ -50,11 +50,11 @@ function StrikeFormPage() {
   }
 
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="strike-form-page-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Strike</p>
-          <h1>Novo strike</h1>
+          <h1 id="strike-form-page-title">Novo strike</h1>
           <p className="page-description">
             Gere uma sessao de leitura com paginas calculadas, preview e destino
             prontos para commit manual.
@@ -63,10 +63,15 @@ function StrikeFormPage() {
       </div>
 
       <section className="strike-form-layout" aria-label="Formulario de strike">
-        <form className="panel strike-form-panel" noValidate onSubmit={handleSubmit}>
+        <form
+          className="panel strike-form-panel"
+          noValidate
+          aria-labelledby="strike-form-title"
+          onSubmit={handleSubmit}
+        >
           <div className="form-section-heading">
             <p className="panel-label">Formulario</p>
-            <h2>Sessao de leitura</h2>
+            <h2 id="strike-form-title">Sessao de leitura</h2>
           </div>
 
           <div className="slug-preview" aria-live="polite">
@@ -233,8 +238,13 @@ function StrikeFormPage() {
           </div>
         </form>
 
-        <aside className="panel panel-compact generation-preview strike-preview-panel">
-          <p className="panel-label">Saida</p>
+        <aside
+          className="panel panel-compact generation-preview strike-preview-panel"
+          aria-labelledby="strike-output-title"
+        >
+          <h2 className="panel-label" id="strike-output-title">
+            Saida
+          </h2>
           <dl className="file-summary">
             <div>
               <dt>Modelo</dt>
@@ -288,7 +298,12 @@ function Field({ children, error, hint, id, label, required = false, wide = fals
     <div className={wide ? 'form-field form-field-wide' : 'form-field'}>
       <label htmlFor={id}>
         {label}
-        {required ? <span aria-label="obrigatorio">*</span> : null}
+        {required ? (
+          <>
+            <span aria-hidden="true">*</span>
+            <span className="visually-hidden">obrigatorio</span>
+          </>
+        ) : null}
       </label>
       {control}
       {hint ? (

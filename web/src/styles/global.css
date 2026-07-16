@@ -43,11 +43,45 @@ ol {
   box-shadow: var(--focus-ring);
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .app-shell {
   width: min(100%, var(--container-width));
   min-height: 100vh;
   margin: 0 auto;
   padding: 12px 20px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  min-height: 36px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  background: var(--color-accent);
+  color: var(--color-text);
+  box-shadow: var(--focus-ring);
+  font-weight: 900;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 20px));
+  transition: transform 120ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 .site-header {
@@ -111,6 +145,7 @@ ol {
   box-shadow: 3px 3px 0 var(--color-shadow);
   font-weight: 800;
   line-height: 1.2;
+  overflow-wrap: anywhere;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
@@ -151,6 +186,7 @@ ol {
 
 .main-content {
   padding: 24px 0 28px;
+  scroll-margin-top: 112px;
 }
 
 .page-layout {
@@ -200,6 +236,7 @@ h1 {
   font-weight: 900;
   letter-spacing: 0;
   line-height: 0.92;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
@@ -550,6 +587,12 @@ p {
   background: var(--color-accent);
 }
 
+.library-filter-option:focus-within {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  box-shadow: var(--focus-ring);
+}
+
 .library-filter-option input {
   width: 16px;
   height: 16px;
@@ -630,6 +673,10 @@ p {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-4);
   list-style: none;
+}
+
+.library-results {
+  min-width: 0;
 }
 
 .library-grid > li {

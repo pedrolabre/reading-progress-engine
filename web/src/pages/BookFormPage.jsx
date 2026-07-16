@@ -61,11 +61,11 @@ function BookFormPage() {
   }
 
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="book-form-page-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Book</p>
-          <h1>Novo livro</h1>
+          <h1 id="book-form-page-title">Novo livro</h1>
           <p className="page-description">
             Gere um arquivo JSON de livro com slug, preview e destino prontos
             para commit manual.
@@ -74,10 +74,15 @@ function BookFormPage() {
       </div>
 
       <section className="book-form-layout" aria-label="Formulario de livro">
-        <form className="panel book-form-panel" noValidate onSubmit={handleSubmit}>
+        <form
+          className="panel book-form-panel"
+          noValidate
+          aria-labelledby="book-form-title"
+          onSubmit={handleSubmit}
+        >
           <div className="form-section-heading">
             <p className="panel-label">Formulario</p>
-            <h2>Metadados</h2>
+            <h2 id="book-form-title">Metadados</h2>
           </div>
 
           <div className="slug-preview" aria-live="polite">
@@ -325,8 +330,13 @@ function BookFormPage() {
           </div>
         </form>
 
-        <aside className="panel panel-compact generation-preview book-preview-panel">
-          <p className="panel-label">Saida</p>
+        <aside
+          className="panel panel-compact generation-preview book-preview-panel"
+          aria-labelledby="book-output-title"
+        >
+          <h2 className="panel-label" id="book-output-title">
+            Saida
+          </h2>
           <dl className="file-summary">
             <div>
               <dt>Modelo</dt>
@@ -388,7 +398,12 @@ function Field({ children, error, hint, id, label, required = false, wide = fals
     <div className={wide ? 'form-field form-field-wide' : 'form-field'}>
       <label htmlFor={id}>
         {label}
-        {required ? <span aria-label="obrigatorio">*</span> : null}
+        {required ? (
+          <>
+            <span aria-hidden="true">*</span>
+            <span className="visually-hidden">obrigatorio</span>
+          </>
+        ) : null}
       </label>
       {control}
       {hint ? (

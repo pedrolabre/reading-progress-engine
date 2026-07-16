@@ -37,11 +37,11 @@ function BookDetailPage() {
   }
 
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="book-detail-page-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Livro</p>
-          <h1>{detail.title}</h1>
+          <h1 id="book-detail-page-title">{detail.title}</h1>
           <p className="page-description">{detail.author}</p>
         </div>
         <div className="page-actions">
@@ -63,20 +63,25 @@ function BookDetailPage() {
 
 function BookDetailLoadingPage({ slug }) {
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="book-detail-loading-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Livro</p>
-          <h1>Carregando detalhe</h1>
+          <h1 id="book-detail-loading-title">Carregando detalhe</h1>
           <p className="page-description">
             Preparando os dados versionados para localizar <code>{slug}</code>.
           </p>
         </div>
       </div>
-      <section className="library-surface library-state" aria-live="polite" aria-busy="true">
+      <section
+        className="library-surface library-state"
+        aria-labelledby="book-detail-loading-state-title"
+        aria-live="polite"
+        aria-busy="true"
+      >
         <div>
           <p className="panel-label">Biblioteca local</p>
-          <h2>Carregando livro</h2>
+          <h2 id="book-detail-loading-state-title">Carregando livro</h2>
           <p>O detalhe usa os mesmos JSONs normalizados da biblioteca.</p>
         </div>
         <div className="library-loading-grid" aria-hidden="true">
@@ -93,11 +98,11 @@ function BookDetailErrorPage({ error }) {
   const details = error?.details || [];
 
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="book-detail-error-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Livro</p>
-          <h1>Dados indisponiveis</h1>
+          <h1 id="book-detail-error-title">Dados indisponiveis</h1>
           <p className="page-description">
             {error?.message || 'Nao foi possivel carregar a biblioteca.'}
           </p>
@@ -108,10 +113,14 @@ function BookDetailErrorPage({ error }) {
           </Link>
         </div>
       </div>
-      <section className="library-surface library-state library-state-error" role="alert">
+      <section
+        className="library-surface library-state library-state-error"
+        role="alert"
+        aria-labelledby="book-detail-error-state-title"
+      >
         <div>
           <p className="panel-label">Erro recuperavel</p>
-          <h2>Revise os JSONs</h2>
+          <h2 id="book-detail-error-state-title">Revise os JSONs</h2>
           <p>Corrija os arquivos indicados e recarregue a pagina.</p>
         </div>
         {details.length > 0 ? <BookDetailWarningList warnings={details} /> : null}
@@ -122,11 +131,11 @@ function BookDetailErrorPage({ error }) {
 
 function BookNotFoundPage({ detail, warnings }) {
   return (
-    <section className="page-layout">
+    <section className="page-layout" aria-labelledby="book-not-found-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Livro</p>
-          <h1>Livro nao encontrado</h1>
+          <h1 id="book-not-found-title">Livro nao encontrado</h1>
           <p className="page-description">
             Nao existe livro carregado com o slug <code>{detail.slug}</code>.
           </p>
@@ -138,12 +147,16 @@ function BookNotFoundPage({ detail, warnings }) {
         </div>
       </div>
 
-      <section className="book-detail-not-found" role="status">
+      <section
+        className="book-detail-not-found"
+        role="status"
+        aria-labelledby="book-not-found-state-title"
+      >
         <span className="library-empty-mark" aria-hidden="true">
           ?
         </span>
         <div>
-          <h2>Escolha um livro registrado</h2>
+          <h2 id="book-not-found-state-title">Escolha um livro registrado</h2>
           <p>A biblioteca carregou normalmente, mas esse slug nao faz parte do acervo.</p>
         </div>
         {detail.availableBooks.length > 0 ? (

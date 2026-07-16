@@ -51,7 +51,7 @@ function CopyButton({
       disabled={!text}
       onClick={handleClick}
     >
-      {buttonLabel}
+      <span aria-live="polite">{buttonLabel}</span>
     </button>
   );
 }

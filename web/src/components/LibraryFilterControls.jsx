@@ -23,6 +23,7 @@ function LibraryFilterControls({
         <button
           className="button-link"
           type="button"
+          aria-controls="library-results"
           disabled={!hasActiveFilters}
           onClick={onClearFilters}
         >
@@ -50,6 +51,7 @@ function LibraryFilterControls({
                     >
                       <input
                         type="checkbox"
+                        aria-controls="library-results"
                         checked={isSelected}
                         onChange={() => onToggleFilter(group.id, option.value)}
                       />

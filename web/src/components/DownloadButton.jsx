@@ -17,6 +17,7 @@ function DownloadButton({
       type="button"
       className={className}
       disabled={!content || !fileName}
+      aria-label={fileName ? `${label}: ${fileName}` : label}
       onClick={handleClick}
     >
       {label}
