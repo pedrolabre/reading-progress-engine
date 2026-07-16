@@ -6,7 +6,7 @@ function CopyButton({
   text,
   label = 'Copiar JSON',
   successLabel = 'Copiado',
-  errorLabel = 'Falhou',
+  errorLabel = 'Nao copiou',
   className = 'button-link',
 }) {
   const [state, setState] = useState('idle');

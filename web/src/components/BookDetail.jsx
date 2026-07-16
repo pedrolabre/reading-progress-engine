@@ -95,6 +95,16 @@ function BookDetail({ detail }) {
         <BookChipGroup emptyText="Sem generos registrados" items={detail.genres} label="Generos" />
         <BookChipGroup emptyText="Sem tags registradas" items={detail.tags} label="Tags" />
 
+        {detail.category.isMissing ? (
+          <div className="book-detail-note">
+            <strong>Categoria ausente</strong>
+            <p>
+              O livro aponta para <code>{detail.category.slug}</code>, mas nenhum JSON
+              com esse slug foi carregado em <code>data/categories</code>.
+            </p>
+          </div>
+        ) : null}
+
         {detail.category.description ? (
           <div className="book-detail-note">
             <strong>{detail.category.name}</strong>

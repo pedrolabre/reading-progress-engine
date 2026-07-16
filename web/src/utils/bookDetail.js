@@ -96,9 +96,12 @@ function createCategoryDetail(book, metrics) {
 
   return {
     slug,
-    name: categoryData.name || formatSlugLabel(slug) || 'Sem categoria',
+    name:
+      categoryData.name ||
+      (slug ? `Categoria nao carregada: ${formatSlugLabel(slug)}` : 'Categoria nao informada'),
     description: normalizeOptionalText(categoryData.description),
     color: categoryData.color || 'var(--color-accent-strong)',
+    isMissing: Boolean(slug && !book?.category),
   };
 }
 

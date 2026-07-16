@@ -26,7 +26,9 @@ function BookCard({ book }) {
   const author = metrics.author || data.author || 'Autor nao informado';
   const status = metrics.status || 'to-read';
   const statusLabel = STATUS_LABELS[status] || status;
-  const categoryName = category?.data?.name || metrics.category || 'Sem categoria';
+  const categoryName =
+    category?.data?.name ||
+    (metrics.category ? `Categoria nao carregada: ${metrics.category}` : 'Categoria nao informada');
   const categoryColor = category?.data?.color || 'var(--color-accent-strong)';
   const lastActivityDate = metrics.activityDates?.lastActivityDate || null;
   const progressText = `${percentageFormatter.format(metrics.progress)}%`;

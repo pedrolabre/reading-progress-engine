@@ -22,7 +22,10 @@ function BookTimeline({ entries = [], title }) {
           </span>
           <div>
             <h3>Nenhum strike registrado</h3>
-            <p>Este livro ainda nao tem sessoes de leitura associadas.</p>
+            <p>
+              Este livro ainda nao tem sessoes em <code>data/strikes</code>. Gere
+              um strike, salve no caminho indicado e faca o commit manualmente.
+            </p>
           </div>
           <Link className="button-link button-link-primary" to="/new/strike">
             Registrar strike

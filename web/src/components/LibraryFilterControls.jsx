@@ -62,7 +62,7 @@ function LibraryFilterControls({
                 })}
               </div>
             ) : (
-              <p className="library-filter-empty-option">Sem opcoes</p>
+              <p className="library-filter-empty-option">Sem dados para este filtro</p>
             )}
           </fieldset>
         ))}

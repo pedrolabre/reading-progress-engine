@@ -158,6 +158,7 @@ function LibraryView({
 
   if (libraryState.status === LIBRARY_LOAD_STATUS.ERROR) {
     const details = libraryState.error?.details || [];
+    const errorMessage = formatLibraryErrorMessage(libraryState.error);
 
     return (
       <section
@@ -167,9 +168,13 @@ function LibraryView({
       >
         <div>
           <p className="panel-label">Biblioteca local</p>
-          <h2 id="library-error-title">Dados indisponiveis</h2>
-          <p>{libraryState.error?.message || 'Nao foi possivel carregar a biblioteca.'}</p>
-          <p>Revise os arquivos JSON indicados e recarregue a pagina.</p>
+          <h2 id="library-error-title">Biblioteca nao carregou</h2>
+          <p>{errorMessage}</p>
+          <p>
+            Corrija os JSONs em <code>data/books</code>, <code>data/categories</code>,
+            <code>data/strikes</code> ou <code>data/library.json</code> e recarregue a
+            pagina.
+          </p>
         </div>
         {details.length > 0 ? <WarningList warnings={details} /> : null}
       </section>
@@ -253,8 +258,11 @@ function LibraryNoFilterMatches({ onClearFilters }) {
         0
       </span>
       <div>
-        <h3>Nenhuma correspondencia</h3>
-        <p>Os filtros ativos nao retornaram livros neste acervo.</p>
+        <h3>Nenhum livro com esses filtros</h3>
+        <p>
+          Os livros continuam carregados. Limpe os filtros ou remova uma opcao para
+          ver o acervo novamente.
+        </p>
       </div>
       <button
         className="button-link button-link-primary"
@@ -272,6 +280,10 @@ function RuntimeWarnings({ warnings }) {
   return (
     <details className="runtime-warnings">
       <summary>{formatWarningCount(warnings.length)}</summary>
+      <p className="runtime-warning-note">
+        A biblioteca abriu, mas encontrou inconsistencias recuperaveis. Revise os
+        arquivos indicados antes do proximo commit de dados.
+      </p>
       <WarningList warnings={warnings} />
     </details>
   );
@@ -343,6 +355,16 @@ function formatBookCount(count) {
 
 function formatWarningCount(count) {
   return count === 1 ? '1 aviso de dados' : `${count} avisos de dados`;
+}
+
+function formatLibraryErrorMessage(error) {
+  const message = error?.message || '';
+
+  if (!message || message === 'Library data could not be loaded.') {
+    return 'A biblioteca encontrou um JSON invalido, um caminho inesperado ou um dado obrigatorio ausente.';
+  }
+
+  return message;
 }
 
 export default App;

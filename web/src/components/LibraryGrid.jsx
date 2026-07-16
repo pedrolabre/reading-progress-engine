@@ -12,7 +12,10 @@ function LibraryGrid({ books = [] }) {
         </span>
         <div>
           <h3>Nenhum livro registrado</h3>
-          <p>Adicione o primeiro JSON de livro para iniciar sua biblioteca.</p>
+          <p>
+            Use o gerador, salve o arquivo em <code>data/books</code> e faca o
+            commit manualmente depois de revisar o JSON.
+          </p>
         </div>
         <Link className="button-link button-link-primary" to="/new/book">
           Criar primeiro livro

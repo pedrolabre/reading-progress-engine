@@ -96,16 +96,15 @@ function BookDetailLoadingPage({ slug }) {
 
 function BookDetailErrorPage({ error }) {
   const details = error?.details || [];
+  const errorMessage = formatLibraryErrorMessage(error);
 
   return (
     <section className="page-layout" aria-labelledby="book-detail-error-title">
       <div className="page-header">
         <div className="page-copy">
           <p className="eyebrow">Livro</p>
-          <h1 id="book-detail-error-title">Dados indisponiveis</h1>
-          <p className="page-description">
-            {error?.message || 'Nao foi possivel carregar a biblioteca.'}
-          </p>
+          <h1 id="book-detail-error-title">Detalhe indisponivel</h1>
+          <p className="page-description">{errorMessage}</p>
         </div>
         <div className="page-actions">
           <Link className="button-link button-link-primary" to="/">
@@ -120,8 +119,11 @@ function BookDetailErrorPage({ error }) {
       >
         <div>
           <p className="panel-label">Erro recuperavel</p>
-          <h2 id="book-detail-error-state-title">Revise os JSONs</h2>
-          <p>Corrija os arquivos indicados e recarregue a pagina.</p>
+          <h2 id="book-detail-error-state-title">Revise os dados carregados</h2>
+          <p>
+            O detalhe usa os mesmos JSONs da biblioteca. Corrija o arquivo
+            indicado, regenere o indice se necessario e recarregue a pagina.
+          </p>
         </div>
         {details.length > 0 ? <BookDetailWarningList warnings={details} /> : null}
       </section>
@@ -137,7 +139,8 @@ function BookNotFoundPage({ detail, warnings }) {
           <p className="eyebrow">Livro</p>
           <h1 id="book-not-found-title">Livro nao encontrado</h1>
           <p className="page-description">
-            Nao existe livro carregado com o slug <code>{detail.slug}</code>.
+            Nao existe livro carregado com o slug <code>{detail.slug}</code>. Confira
+            a rota ou salve o JSON esperado em <code>data/books</code>.
           </p>
         </div>
         <div className="page-actions">
@@ -156,8 +159,11 @@ function BookNotFoundPage({ detail, warnings }) {
           ?
         </span>
         <div>
-          <h2 id="book-not-found-state-title">Escolha um livro registrado</h2>
-          <p>A biblioteca carregou normalmente, mas esse slug nao faz parte do acervo.</p>
+          <h2 id="book-not-found-state-title">Slug fora do acervo carregado</h2>
+          <p>
+            A biblioteca carregou normalmente. Abra um livro listado abaixo ou
+            adicione um JSON de livro antes de tentar esta rota.
+          </p>
         </div>
         {detail.availableBooks.length > 0 ? (
           <ul className="book-detail-available-list" aria-label="Livros disponiveis">
@@ -179,6 +185,10 @@ function BookDetailWarnings({ warnings }) {
   return (
     <details className="runtime-warnings">
       <summary>{formatWarningCount(warnings.length)}</summary>
+      <p className="runtime-warning-note">
+        O detalhe esta disponivel, mas alguns dados carregados pedem revisao antes
+        do proximo commit de dados.
+      </p>
       <BookDetailWarningList warnings={warnings} />
     </details>
   );
@@ -196,6 +206,16 @@ function BookDetailWarningList({ warnings }) {
 
 function formatWarningCount(count) {
   return count === 1 ? '1 aviso de dados' : `${count} avisos de dados`;
+}
+
+function formatLibraryErrorMessage(error) {
+  const message = error?.message || '';
+
+  if (!message || message === 'Library data could not be loaded.') {
+    return 'A biblioteca encontrou um JSON invalido, um caminho inesperado ou um dado obrigatorio ausente.';
+  }
+
+  return message;
 }
 
 export default BookDetailPage;

@@ -81,8 +81,8 @@ function CategoryFormPage() {
           <p className="eyebrow">Category</p>
           <h1 id="category-form-page-title">Nova categoria</h1>
           <p className="page-description">
-            Gere um arquivo JSON de categoria com slug, cor, preview e destino
-            prontos para commit manual.
+            Gere um JSON de categoria. Voce ainda salva o arquivo no caminho
+            indicado e faz o commit manualmente.
           </p>
         </div>
       </div>
@@ -206,7 +206,8 @@ function CategoryFormPage() {
             </>
           ) : (
             <div className="form-summary" role={submitted ? 'alert' : 'status'}>
-              <strong>JSON aguardando campos validos</strong>
+              <strong>JSON ainda invalido</strong>
+              <p>Corrija os campos listados para liberar copia, download e preview.</p>
               <ul>
                 {errorEntries.map(([field, message]) => (
                   <li key={field}>{message}</li>

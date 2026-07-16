@@ -56,8 +56,8 @@ function StrikeFormPage() {
           <p className="eyebrow">Strike</p>
           <h1 id="strike-form-page-title">Novo strike</h1>
           <p className="page-description">
-            Gere uma sessao de leitura com paginas calculadas, preview e destino
-            prontos para commit manual.
+            Gere uma sessao de leitura com paginas calculadas. Voce ainda salva o
+            JSON no caminho indicado e faz o commit manualmente.
           </p>
         </div>
       </div>
@@ -270,7 +270,8 @@ function StrikeFormPage() {
             </>
           ) : (
             <div className="form-summary" role={submitted ? 'alert' : 'status'}>
-              <strong>JSON aguardando campos validos</strong>
+              <strong>JSON ainda invalido</strong>
+              <p>Corrija os campos listados para liberar copia, download e preview.</p>
               <ul>
                 {errorEntries.map(([field, message]) => (
                   <li key={field}>{message}</li>
