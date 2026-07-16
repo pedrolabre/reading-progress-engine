@@ -1,0 +1,102 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Validate, build and deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Validate data
+        run: node scripts/validate.js
+
+      - name: Regenerate library index
+        run: node scripts/generate-library.js
+
+      - name: Check generated library index is current
+        run: git diff --exit-code -- data/library.json
+
+      - name: Validate data after generation
+        run: node scripts/validate.js
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check scripts/validate.js
+          node --check scripts/generate-library.js
+          node --check scripts/slugify.js
+          node --check web/src/utils/libraryDiscovery.js
+          node --check web/src/utils/libraryLoader.js
+          node --check web/src/utils/libraryMetrics.js
+          node --check web/src/utils/librarySorting.js
+          node --check web/src/utils/libraryFilters.js
+          node --check web/src/utils/bookDetail.js
+          node --check web/src/utils/bookForm.js
+          node --check web/src/utils/strikeForm.js
+          node --check web/src/utils/categoryForm.js
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm ci
+
+      - name: Run web lint if configured
+        working-directory: web
+        run: |
+          if node -e "process.exit(require('./package.json').scripts?.lint ? 0 : 1)"; then
+            npm run lint
+          else
+            echo "npm run lint not configured; skipping."
+          fi
+
+      - name: Run web tests if configured
+        working-directory: web
+        run: |
+          if node -e "process.exit(require('./package.json').scripts?.test ? 0 : 1)"; then
+            npm run test
+          else
+            echo "npm run test not configured; skipping."
+          fi
+
+      - name: Build web app for GitHub Pages
+        working-directory: web
+        env:
+          GITHUB_PAGES: "true"
+        run: npm run build
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

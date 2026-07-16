@@ -143,6 +143,7 @@ Isso é intencional. A aplicação web **não** faz push no GitHub. Ela gera arq
 reading-progress-engine/
 |-- .github/
 |   `-- workflows/
+|       |-- deploy-pages.yml
 |       `-- validate.yml
 |-- README.md
 |-- data/
@@ -157,6 +158,7 @@ reading-progress-engine/
     |-- index.html
     |-- package.json
     |-- package-lock.json
+    |-- vite.config.js
     `-- src/
         |-- App.jsx
         |-- components/
@@ -197,6 +199,24 @@ reading-progress-engine/
 
 ---
 
+## Deploy estático
+
+O MVP é publicado como SPA estática no GitHub Pages por GitHub Actions.
+
+- `.github/workflows/validate.yml` valida dados e build em `push` e `pull_request`.
+- `.github/workflows/deploy-pages.yml` roda em `push` na `main` e em acionamento manual.
+- O deploy usa Node `20.19.0`, valida os dados, regenera `data/library.json`,
+  falha se o índice gerado ficar diferente, checa sintaxe JavaScript e faz o
+  build de `web/`.
+- O build de Pages usa o base path `/reading-progress-engine/`, compatível com
+  GitHub Pages de projeto.
+- O artifact publicado é somente `web/dist`.
+
+Para o deploy rodar no GitHub, configure Pages para usar **GitHub Actions** como
+fonte de publicação nas configurações do repositório.
+
+---
+
 ## Decisões de design
 
 Cada escolha técnica nesse projeto é guiada pelo problema, não por tendências:
@@ -214,4 +234,6 @@ Cada escolha técnica nesse projeto é guiada pelo problema, não por tendência
 
 ## Status
 
-Em desenvolvimento. Definindo arquitetura e schemas antes de escrever código.
+MVP pronto para deploy estático: dados, geradores, biblioteca, detalhe,
+descoberta automática de JSONs, CI de validação e workflow de GitHub Pages
+estão configurados sem backend, banco de dados, login ou API externa obrigatória.
