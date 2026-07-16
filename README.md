@@ -181,6 +181,7 @@ reading-progress-engine/
             |-- download.js
             |-- filePaths.js
             |-- jsonGenerator.js
+            |-- libraryDiscovery.js
             |-- libraryFilters.js
             |-- libraryLoader.js
             |-- libraryMetrics.js

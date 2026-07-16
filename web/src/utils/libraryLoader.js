@@ -1,5 +1,12 @@
 import libraryJson from '../../../data/library.json' with { type: 'json' };
 
+import {
+  createBookSourceEntry,
+  createCategorySourceEntry,
+  createStrikeSourceEntry,
+  isValidLibrarySlug,
+} from './libraryDiscovery.js';
+
 import atomicHabitsBook from '../../../data/books/atomic-habits.json' with { type: 'json' };
 import duneBook from '../../../data/books/dune.json' with { type: 'json' };
 import theWayOfKingsBook from '../../../data/books/the-way-of-kings.json' with { type: 'json' };
@@ -25,56 +32,44 @@ export const LIBRARY_LOAD_STATUS = {
   ERROR: 'error',
 };
 
-const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
 const STATIC_LIBRARY_SOURCE = {
   strategy: 'vite-static-json-imports',
   books: [
-    createSourceEntry('atomic-habits', 'data/books/atomic-habits.json', atomicHabitsBook),
-    createSourceEntry('dune', 'data/books/dune.json', duneBook),
-    createSourceEntry('the-way-of-kings', 'data/books/the-way-of-kings.json', theWayOfKingsBook),
+    createBookSourceEntry('data/books/atomic-habits.json', atomicHabitsBook),
+    createBookSourceEntry('data/books/dune.json', duneBook),
+    createBookSourceEntry('data/books/the-way-of-kings.json', theWayOfKingsBook),
   ],
   categories: [
-    createSourceEntry('fantasy', 'data/categories/fantasy.json', fantasyCategory),
-    createSourceEntry('non-fiction', 'data/categories/non-fiction.json', nonFictionCategory),
-    createSourceEntry(
-      'science-fiction',
-      'data/categories/science-fiction.json',
-      scienceFictionCategory
-    ),
+    createCategorySourceEntry('data/categories/fantasy.json', fantasyCategory),
+    createCategorySourceEntry('data/categories/non-fiction.json', nonFictionCategory),
+    createCategorySourceEntry('data/categories/science-fiction.json', scienceFictionCategory),
   ],
   strikes: [
     createStrikeSourceEntry(
-      'atomic-habits',
       'data/strikes/atomic-habits/2026-04-03.json',
       atomicHabitsStrike20260403
     ),
     createStrikeSourceEntry(
-      'atomic-habits',
       'data/strikes/atomic-habits/2026-04-08.json',
       atomicHabitsStrike20260408
     ),
-    createStrikeSourceEntry('dune', 'data/strikes/dune/2026-01-05.json', duneStrike20260105),
-    createStrikeSourceEntry('dune', 'data/strikes/dune/2026-01-12.json', duneStrike20260112),
-    createStrikeSourceEntry('dune', 'data/strikes/dune/2026-01-20.json', duneStrike20260120),
-    createStrikeSourceEntry('dune', 'data/strikes/dune/2026-02-02.json', duneStrike20260202),
+    createStrikeSourceEntry('data/strikes/dune/2026-01-05.json', duneStrike20260105),
+    createStrikeSourceEntry('data/strikes/dune/2026-01-12.json', duneStrike20260112),
+    createStrikeSourceEntry('data/strikes/dune/2026-01-20.json', duneStrike20260120),
+    createStrikeSourceEntry('data/strikes/dune/2026-02-02.json', duneStrike20260202),
     createStrikeSourceEntry(
-      'the-way-of-kings',
       'data/strikes/the-way-of-kings/2026-02-10.json',
       theWayOfKingsStrike20260210
     ),
     createStrikeSourceEntry(
-      'the-way-of-kings',
       'data/strikes/the-way-of-kings/2026-02-14.json',
       theWayOfKingsStrike20260214
     ),
     createStrikeSourceEntry(
-      'the-way-of-kings',
       'data/strikes/the-way-of-kings/2026-03-01.json',
       theWayOfKingsStrike20260301
     ),
     createStrikeSourceEntry(
-      'the-way-of-kings',
       'data/strikes/the-way-of-kings/2026-03-15.json',
       theWayOfKingsStrike20260315
     ),
@@ -196,22 +191,6 @@ class LibraryLoaderError extends Error {
   }
 }
 
-function createSourceEntry(slug, path, data) {
-  return {
-    slug,
-    path,
-    data,
-  };
-}
-
-function createStrikeSourceEntry(bookSlug, path, data) {
-  return {
-    bookSlug,
-    path,
-    data,
-  };
-}
-
 function normalizeEntityEntries(entries, label, fatalErrors) {
   if (!Array.isArray(entries)) {
     fatalErrors.push(`${label} source must be an array`);
@@ -227,7 +206,7 @@ function normalizeEntityEntries(entries, label, fatalErrors) {
       continue;
     }
 
-    if (!SLUG_PATTERN.test(entry.slug)) {
+    if (!isValidLibrarySlug(entry.slug)) {
       fatalErrors.push(`${entry.path}: source slug "${entry.slug}" is not valid`);
     }
 
@@ -262,11 +241,12 @@ function normalizeStrikeEntries(entries, fatalErrors) {
       continue;
     }
 
-    if (!SLUG_PATTERN.test(entry.bookSlug)) {
+    if (!isValidLibrarySlug(entry.bookSlug)) {
       fatalErrors.push(`${entry.path}: source book slug "${entry.bookSlug}" is not valid`);
     }
 
-    const fileName = getFileName(entry.path);
+    const fileName = entry.fileName || getFileName(entry.path);
+    const fileStem = entry.fileStem || fileName.replace(/\.json$/, '');
     const id = `${entry.bookSlug}/${fileName}`;
 
     if (seen.has(id)) {
@@ -279,6 +259,7 @@ function normalizeStrikeEntries(entries, fatalErrors) {
       id,
       bookSlug: entry.bookSlug,
       fileName,
+      fileStem,
       path: entry.path,
       data: entry.data,
     });
