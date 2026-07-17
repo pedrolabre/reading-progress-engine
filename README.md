@@ -1,20 +1,67 @@
-# 📖 Reading Progress Engine
+<div align="right">
+  🇧🇷 <b>Português</b> &nbsp;•&nbsp; <a href="./README.en.md">🇺🇸 English</a>
+</div>
 
-> **Your reading history belongs to you. Store it as structured data.**
+<div align="center">
+
+![Reading Progress Engine Banner](./assets/banner-animated.svg)
+
+</div>
+
+<div align="center">
+
+![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&duration=3000&pause=1000&color=4B9ED9&center=true&vCenter=true&width=750&lines=O+seu+hist%C3%B3rico+de+leitura+pertence+a+voc%C3%AA;Armazenado+completamente+como+dados+estruturados;Sem+banco+de+dados%2C+sem+contas%2C+sem+APIs+obrigat%C3%B3rias;Apenas+dados+estruturados%2C+versionados+pelo+Git)
+
+</div>
+
+<div align="center">
+
+[![JSON](https://img.shields.io/badge/JSON-Data-4B9ED9?style=for-the-badge&logo=json&logoColor=white)](#-como-funciona)
+[![React](https://img.shields.io/badge/React-18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](#-como-funciona)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white)](#-como-funciona)
+[![GitHub Pages](https://img.shields.io/badge/Deploy-GitHub%20Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white)](#-deploy-estático)
+
+</div>
 
 ---
 
-## O que é isso?
-
-Reading Progress Engine não é um app de leitura. Não é uma rede social. Não é um gamificador.
-
+**Reading Progress Engine** não é um app de leitura. Não é uma rede social. Não é um gamificador.
 É um **sistema de dados estruturados** para transformar o hábito de leitura em um histórico pesquisável, versionável e pessoal — armazenado inteiramente como arquivos JSON em um repositório GitHub que **você** controla.
-
 Sem banco de dados. Sem contas. Sem APIs obrigatórias. Apenas dados estruturados, versionados pelo Git.
 
+<div align="center">
+
+<table>
+  <tr>
+    <td align="center" valign="middle" width="80">
+      <img src="./assets/logo.svg" alt="Reading Progress Engine Icon" width="60" height="60">
+    </td>
+    <td>
+      <strong>Reading Progress Engine</strong><br/>
+      <small>Sistema de registro de leitura baseado em arquivos JSON sob seu controle total.</small><br/>
+      <a href="https://pedrolabre.github.io/reading-progress-engine" target="_blank">
+        <img src="https://img.shields.io/badge/Acessar%20Deploy-4B9ED9?style=for-the-badge&logo=github&logoColor=white" alt="Acessar Deploy" height="20">
+      </a>
+    </td>
+  </tr>
+</table>
+
+</div>
+
 ---
 
-## Por que existe?
+## 📌 Índice Geral
+
+1. [🎯 Por que existe?](#-por-que-existe)
+2. [⚙️ Como funciona?](#-como-funciona)
+3. [📁 Estrutura do Projeto](#-estrutura-do-projeto)
+4. [🚀 Deploy estático](#-deploy-estático)
+5. [🧠 Decisões de design](#-decisões-de-design)
+6. [✅ Status](#-status)
+
+---
+
+## 🎯 Por que existe?
 
 Esse projeto nasceu de uma necessidade pessoal: **a preocupação em registrar**.
 
@@ -35,9 +82,9 @@ A partir disso, uma visão mais ampla surgiu:
 
 ---
 
-## Como funciona?
+## ⚙️ Como funciona?
 
-### Camada de dados
+### 🧱 Camada de dados
 
 Os dados de leitura são organizados como arquivos JSON dentro do repositório:
 
@@ -123,23 +170,22 @@ Os dados de leitura são organizados como arquivos JSON dentro do repositório:
 
 </details>
 
-### Aplicação web
+### 💻 Aplicação web
 
 A aplicação tem dois propósitos:
 
 1. **Geração de dados** — Formulários que produzem arquivos JSON válidos, com o nome correto, caminho e estrutura. Você preenche o formulário, o app gera o arquivo, e você faz o commit manualmente.
-
 2. **Visualização de dados** — O app lê todos os arquivos JSON do repositório e constrói uma biblioteca visual interativa. Ordenação, filtros e exploração são responsabilidade da aplicação — não ficam armazenados nos arquivos de dados.
 
-### O commit é manual
+### ✍️ O commit é manual
 
 Isso é intencional. A aplicação web **não** faz push no GitHub. Ela gera arquivos. Você faz o commit. Isso mantém o fluxo simples, transparente e sob seu controle.
 
 ---
 
-## Estrutura do Projeto
+## 📁 Estrutura do Projeto
 
-```
+```text
 reading-progress-engine/
 |-- .github/
 |   `-- workflows/
@@ -199,25 +245,21 @@ reading-progress-engine/
 
 ---
 
-## Deploy estático
+## 🚀 Deploy estático
 
 O MVP é publicado como SPA estática no GitHub Pages por GitHub Actions.
 
 - `.github/workflows/validate.yml` valida dados e build em `push` e `pull_request`.
 - `.github/workflows/deploy-pages.yml` roda em `push` na `main` e em acionamento manual.
-- O deploy usa Node `20.19.0`, valida os dados, regenera `data/library.json`,
-  falha se o índice gerado ficar diferente, checa sintaxe JavaScript e faz o
-  build de `web/`.
-- O build de Pages usa o base path `/reading-progress-engine/`, compatível com
-  GitHub Pages de projeto.
+- O deploy usa Node `20.19.0`, valida os dados, regenera `data/library.json`, falha se o índice gerado ficar diferente, checa sintaxe JavaScript e faz o build de `web/`.
+- O build de Pages usa o base path `/reading-progress-engine/`, compatível com GitHub Pages de projeto.
 - O artifact publicado é somente `web/dist`.
 
-Para o deploy rodar no GitHub, configure Pages para usar **GitHub Actions** como
-fonte de publicação nas configurações do repositório.
+Para o deploy rodar no GitHub, configure Pages para usar **GitHub Actions** como fonte de publicação nas configurações do repositório.
 
 ---
 
-## Decisões de design
+## 🧠 Decisões de design
 
 Cada escolha técnica nesse projeto é guiada pelo problema, não por tendências:
 
@@ -232,8 +274,14 @@ Cada escolha técnica nesse projeto é guiada pelo problema, não por tendência
 
 ---
 
-## Status
+## ✅ Status
 
 MVP pronto para deploy estático: dados, geradores, biblioteca, detalhe,
 descoberta automática de JSONs, CI de validação e workflow de GitHub Pages
 estão configurados sem backend, banco de dados, login ou API externa obrigatória.
+
+---
+
+<div align="center">
+Desenvolvido por <b>Pedro Labre</b>
+</div>

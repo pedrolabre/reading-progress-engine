@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1024 1024"
+     width="1024"
+     height="1024"
+     role="img"
+     aria-labelledby="title desc">
+  <title id="title">Reading Progress Engine</title>
+  <desc id="desc">
+    Três livros coloridos com as letras R, P e E, um livro branco inclinado
+    e uma prateleira branca dentro de um círculo bege. A área externa ao
+    círculo é transparente.
+  </desc>
+
+  <circle cx="512" cy="512" r="435" fill="#FDF6E3" stroke="#111111" stroke-width="14"/>
+
+  <!-- Livro branco inclinado -->
+  <g transform="rotate(-14 747 514)">
+    <rect x="696" y="303" width="96" height="353" rx="19"
+          fill="#FFFFFF"
+          stroke="#111111"
+          stroke-width="10"/>
+
+    <line x1="710" y1="357" x2="779" y2="357"
+          stroke="#111111" stroke-width="10" stroke-linecap="round"/>
+    <line x1="711" y1="613" x2="779" y2="613"
+          stroke="#111111" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <!-- Livro R -->
+  <rect x="226" y="256" width="142" height="400" rx="19"
+        fill="#D9E8F5"
+        stroke="#111111"
+        stroke-width="10"/>
+
+  <!-- Livro P -->
+  <rect x="366" y="256" width="142" height="400" rx="19"
+        fill="#FEF2B7"
+        stroke="#111111"
+        stroke-width="10"/>
+
+  <!-- Livro E -->
+  <rect x="506" y="256" width="142" height="400" rx="19"
+        fill="#FBD3E1"
+        stroke="#111111"
+        stroke-width="10"/>
+
+  <!-- Letras -->
+  <g fill="#111111"
+     font-family="Arial, Helvetica, sans-serif"
+     font-size="118"
+     font-weight="bold"
+     text-anchor="middle">
+    <text x="297" y="507">R</text>
+    <text x="437" y="507">P</text>
+    <text x="577" y="507">E</text>
+  </g>
+
+  <!-- Linhas inferiores dos livros -->
+  <g fill="none"
+     stroke="#111111"
+     stroke-width="10"
+     stroke-linecap="round">
+    <line x1="260" y1="575" x2="334" y2="575"/>
+    <line x1="260" y1="599" x2="334" y2="599"/>
+
+    <line x1="400" y1="575" x2="474" y2="575"/>
+    <line x1="400" y1="599" x2="474" y2="599"/>
+
+    <line x1="540" y1="575" x2="614" y2="575"/>
+    <line x1="540" y1="599" x2="614" y2="599"/>
+  </g>
+
+  <!-- Sombra sólida da prateleira -->
+  <rect x="188" y="713" width="660" height="42" rx="10"
+        fill="#111111"/>
+
+  <!-- Prateleira branca -->
+  <rect x="176" y="654" width="672" height="76" rx="11"
+        fill="#FFFFFF"
+        stroke="#111111"
+        stroke-width="10"/>
+</svg>

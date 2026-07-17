@@ -1,0 +1,188 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" width="100%" height="100%">
+  <defs>
+    <!-- Google Fonts Import -->
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;family=Share+Tech+Mono&amp;display=swap');
+      
+      :root {
+        /* Base: Dark Mode */
+        --bg-color-1: #2368c4;
+        --bg-color-2: #70b7ff;
+        --bg-color-3: #2368c4;
+        --border-cota: #1a519c;
+        --tech-color: #cfeaff;
+        
+        --text-title-1: #ffffff;
+        --text-subtitle: #fff1ad;
+        --text-body: #e5e7eb;
+        
+        /* Mockup (always looks like the app's light theme) */
+        --mockup-bg: #fffdf7;
+        --mockup-border: #111111;
+        --mockup-titlebar-bg: #dff4ff;
+        --mockup-url-bg: #fffdf7;
+        --mockup-url-border: #111111;
+        --mockup-url-text: #30343a;
+        --mockup-text: #111111;
+        --mockup-string: #2368c4;
+        --mockup-key: #555b64;
+        --mockup-number: #111111;
+      }
+
+      @media (prefers-color-scheme: light) {
+        :root {
+          /* Light Mode */
+          --bg-color-1: #dff4ff;
+          --bg-color-2: #cfeaff;
+          --bg-color-3: #dff4ff;
+          --border-cota: #70b7ff;
+          --tech-color: #555b64;
+          
+          --text-title-1: #111111;
+          --text-subtitle: #2368c4;
+          --text-body: #30343a;
+          
+          /* Mockup remains the same */
+          --mockup-bg: #fffdf7;
+          --mockup-border: #111111;
+          --mockup-titlebar-bg: #dff4ff;
+          --mockup-url-bg: #fffdf7;
+          --mockup-url-border: #111111;
+          --mockup-url-text: #30343a;
+          --mockup-text: #111111;
+          --mockup-string: #2368c4;
+          --mockup-key: #555b64;
+          --mockup-number: #111111;
+        }
+      }
+
+      .text-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; fill: var(--text-title-1); }
+      .text-subtitle { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; fill: var(--text-subtitle); letter-spacing: 5px; }
+      .text-body-style { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; fill: var(--text-body); }
+      .text-tech { font-family: 'Share Tech Mono', monospace; fill: var(--tech-color); font-size: 11px; }
+      .json-text { font-family: 'Share Tech Mono', monospace; font-size: 14px; fill: var(--mockup-text); }
+      .json-key { fill: var(--mockup-key); font-weight: 700; }
+      .json-string { fill: var(--mockup-string); }
+      .json-number { fill: var(--mockup-number); }
+      .badge-text { font-family: 'Share Tech Mono', monospace; font-weight: 700; fill: #111111; font-size: 10px; text-anchor: middle; }
+
+      @keyframes float-mockup {
+        0%, 100% { transform: translateY(0px) rotate(0.5deg); }
+        50% { transform: translateY(-6px) rotate(-0.5deg); }
+      }
+      .mockup-group { animation: float-mockup 6s ease-in-out infinite; transform-origin: 975px 225px; }
+
+      @keyframes float-badge-1 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(-2px, -6px); } }
+      @keyframes float-badge-2 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(3px, -4px); } }
+      @keyframes float-badge-3 { 0%, 100% { transform: translate(0px, 0px); } 50% { transform: translate(-2px, 5px); } }
+      .badge-float-1 { animation: float-badge-1 5s ease-in-out infinite; }
+      .badge-float-2 { animation: float-badge-2 4.5s ease-in-out infinite; }
+      .badge-float-3 { animation: float-badge-3 4.8s ease-in-out infinite; }
+    </style>
+
+    <clipPath id="topRoundedClip">
+      <rect x="0" y="0" width="390" height="28" rx="14" ry="14" />
+    </clipPath>
+
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--bg-color-1)" />
+      <stop offset="50%" stop-color="var(--bg-color-2)" />
+      <stop offset="100%" stop-color="var(--bg-color-3)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="480" fill="url(#bg-grad)" />
+
+  <!-- Isometric Grid Pattern -->
+  <g opacity="0.12">
+    <path d="M-100,0 L1300,0 M-100,40 L1300,40 M-100,80 L1300,80 M-100,120 L1300,120 M-100,160 L1300,160 M-100,200 L1300,200 M-100,240 L1300,240 M-100,280 L1300,280 M-100,320 L1300,320 M-100,360 L1300,360 M-100,400 L1300,400 M-100,440 L1300,440" stroke="var(--border-cota)" stroke-width="1"/>
+    <path d="M-100,0 L1300,700 M-100,-200 L1300,500 M-100,-400 L1300,300 M-100,-600 L1300,100 M-100,200 L1300,900 M-100,400 L1300,1100" stroke="var(--border-cota)" stroke-width="0.5" stroke-dasharray="3,3"/>
+  </g>
+
+  <!-- LEFT SIDE: Project Identity -->
+  <g transform="translate(30, 137) scale(0.20)">
+    <!-- Embed RPE Logo inside banner -->
+    <circle cx="512" cy="512" r="435" fill="#FDF6E3" stroke="#111111" stroke-width="14"/>
+    <g transform="rotate(-14 747 514)">
+      <rect x="696" y="303" width="96" height="353" rx="19" fill="#FFFFFF" stroke="#111111" stroke-width="10"/>
+      <line x1="710" y1="357" x2="779" y2="357" stroke="#111111" stroke-width="10" stroke-linecap="round"/>
+      <line x1="711" y1="613" x2="779" y2="613" stroke="#111111" stroke-width="10" stroke-linecap="round"/>
+    </g>
+    <rect x="226" y="256" width="142" height="400" rx="19" fill="#D9E8F5" stroke="#111111" stroke-width="10"/>
+    <rect x="366" y="256" width="142" height="400" rx="19" fill="#FEF2B7" stroke="#111111" stroke-width="10"/>
+    <rect x="506" y="256" width="142" height="400" rx="19" fill="#FBD3E1" stroke="#111111" stroke-width="10"/>
+    <g fill="#111111" font-family="Arial, sans-serif" font-size="118" font-weight="bold" text-anchor="middle">
+      <text x="297" y="507">R</text>
+      <text x="437" y="507">P</text>
+      <text x="577" y="507">E</text>
+    </g>
+    <g fill="none" stroke="#111111" stroke-width="10" stroke-linecap="round">
+      <line x1="260" y1="575" x2="334" y2="575"/>
+      <line x1="260" y1="599" x2="334" y2="599"/>
+      <line x1="400" y1="575" x2="474" y2="575"/>
+      <line x1="400" y1="599" x2="474" y2="599"/>
+      <line x1="540" y1="575" x2="614" y2="575"/>
+      <line x1="540" y1="599" x2="614" y2="599"/>
+    </g>
+    <rect x="188" y="713" width="660" height="42" rx="10" fill="#111111"/>
+    <rect x="176" y="654" width="672" height="76" rx="11" fill="#FFFFFF" stroke="#111111" stroke-width="10"/>
+  </g>
+
+  <!-- Typography Block -->
+  <g transform="translate(260, 0)">
+    <text x="0" y="140" class="text-title" font-size="38" letter-spacing="0">READING</text>
+    <text x="0" y="185" class="text-title" font-size="38" letter-spacing="0">PROGRESS</text>
+    <text x="0" y="230" class="text-title" font-size="38" letter-spacing="0">ENGINE</text>
+    <text x="2" y="275" class="text-subtitle" font-size="15">REGISTRO &amp; BIBLIOTECA</text>
+    <text x="2" y="315" class="text-body-style" font-size="14">Histórico de leitura documentado em JSON, 100% sob seu controle.</text>
+    <text x="2" y="345" class="text-tech" font-size="10">JSON // REACT // VITE // NO_DB // OFFLINE_FIRST // GITHUB_PAGES</text>
+  </g>
+
+  <!-- Badges -->
+  <g transform="translate(260, 400)">
+    <g class="badge-float-1">
+      <circle r="22" fill="#FEF2B7" stroke="#111111" stroke-width="1.5" />
+      <text y="4" class="badge-text">JSON</text>
+    </g>
+  </g>
+  <g transform="translate(355, 420)">
+    <g class="badge-float-2">
+      <circle r="22" fill="#D9E8F5" stroke="#111111" stroke-width="1.5" />
+      <text y="4" class="badge-text">DATA</text>
+    </g>
+  </g>
+  <g transform="translate(450, 400)">
+    <g class="badge-float-3">
+      <circle r="22" fill="#FBD3E1" stroke="#111111" stroke-width="1.5" />
+      <text y="4" class="badge-text">WEB</text>
+    </g>
+  </g>
+
+  <!-- RIGHT SIDE: Browser Mockup with JSON data -->
+  <g class="mockup-group">
+    <rect x="780" y="85" width="390" height="280" rx="14" fill="var(--mockup-bg)" stroke="var(--mockup-border)" stroke-width="1.5" />
+    <g clip-path="url(#topRoundedClip)" transform="translate(780, 85)">
+      <rect x="0" y="0" width="390" height="28" fill="var(--mockup-titlebar-bg)" />
+    </g>
+    <circle cx="800" cy="99" r="4" fill="#ea4aaa" />
+    <circle cx="812" cy="99" r="4" fill="#ffc72c" />
+    <circle cx="824" cy="99" r="4" fill="#28a745" />
+    
+    <rect x="850" y="92" width="220" height="14" rx="4" fill="var(--mockup-url-bg)" stroke="var(--mockup-url-border)" stroke-width="0.75" />
+    <text x="960" y="102" font-family="'Segoe UI', system-ui, sans-serif" font-size="7" fill="var(--mockup-url-text)" text-anchor="middle">pedrolabre.github.io/reading-progress-engine</text>
+    
+    <!-- JSON Mockup inside the browser -->
+    <g transform="translate(800, 140)">
+      <text class="json-text" y="0">{</text>
+      <text class="json-text" y="24" x="20"><tspan class="json-key">"title"</tspan>: <tspan class="json-string">"The Way of Kings"</tspan>,</text>
+      <text class="json-text" y="48" x="20"><tspan class="json-key">"author"</tspan>: <tspan class="json-string">"Brandon Sanderson"</tspan>,</text>
+      <text class="json-text" y="72" x="20"><tspan class="json-key">"totalPages"</tspan>: <tspan class="json-number">1007</tspan>,</text>
+      <text class="json-text" y="96" x="20"><tspan class="json-key">"currentPage"</tspan>: <tspan class="json-number">203</tspan>,</text>
+      <text class="json-text" y="120" x="20"><tspan class="json-key">"status"</tspan>: <tspan class="json-string">"reading"</tspan>,</text>
+      <text class="json-text" y="144" x="20"><tspan class="json-key">"category"</tspan>: <tspan class="json-string">"fantasy"</tspan>,</text>
+      <text class="json-text" y="168" x="20"><tspan class="json-key">"genres"</tspan>: [<tspan class="json-string">"epic-fantasy"</tspan>, <tspan class="json-string">"fiction"</tspan>]</text>
+      <text class="json-text" y="192">}</text>
+    </g>
+  </g>
+</svg>
