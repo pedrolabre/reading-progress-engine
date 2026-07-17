@@ -1,11 +1,27 @@
 {
-  "generatedAt": "1970-01-01T00:00:00Z",
-  "totalBooks": 0,
+  "generatedAt": "2025-09-03T00:00:00Z",
+  "totalBooks": 1,
   "totalPagesRead": 0,
   "booksCompleted": 0,
-  "booksReading": 0,
+  "booksReading": 1,
   "booksPaused": 0,
   "booksToRead": 0,
   "booksDropped": 0,
-  "books": []
+  "books": [
+    {
+      "slug": "mistborn-o-imperio-final",
+      "title": "Mistborn: O Império Final",
+      "author": "Brandon Sanderson",
+      "category": "fantasy",
+      "status": "reading",
+      "totalPages": 720,
+      "currentPage": 209,
+      "progress": 29.03,
+      "totalStrikes": 0,
+      "totalPagesRead": 0,
+      "firstStrike": null,
+      "lastStrike": null,
+      "averagePagesPerStrike": 0
+    }
+  ]
 }
