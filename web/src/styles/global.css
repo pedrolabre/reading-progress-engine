@@ -33,6 +33,10 @@ a {
   color: inherit;
 }
 
+code {
+  overflow-wrap: anywhere;
+}
+
 ul,
 ol {
   margin: 0;
@@ -668,6 +672,7 @@ p {
 .library-totals div {
   display: flex;
   min-width: 0;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-2);
@@ -694,11 +699,14 @@ p {
 }
 
 .library-totals dd {
+  min-width: 0;
   margin: 0;
   color: var(--color-text);
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 900;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
 
 .library-grid {
@@ -1086,10 +1094,12 @@ p {
 
 .runtime-warnings summary {
   width: fit-content;
+  max-width: 100%;
   cursor: pointer;
   color: var(--color-text);
   font-size: 0.78rem;
   font-weight: 900;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
@@ -1408,6 +1418,9 @@ p {
 }
 
 .book-timeline-item-header > span {
+  max-width: 100%;
+  min-width: 0;
+  justify-self: end;
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 5px 8px;
@@ -1417,6 +1430,7 @@ p {
   font-size: 0.78rem;
   font-weight: 900;
   line-height: 1.2;
+  overflow-wrap: anywhere;
   white-space: nowrap;
 }
 
@@ -1489,6 +1503,8 @@ p {
 
 .book-detail-available-list a {
   display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
   min-height: 34px;
   align-items: center;
   border: 2px solid var(--color-border);
@@ -1500,7 +1516,9 @@ p {
   font-size: 0.78rem;
   font-weight: 900;
   line-height: 1.2;
+  overflow-wrap: anywhere;
   text-decoration: none;
+  white-space: normal;
 }
 
 .route-list,
@@ -1513,6 +1531,8 @@ p {
 .route-list a,
 .field-list li {
   display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
   min-height: 36px;
   align-items: center;
   border: 2px solid var(--color-border);
@@ -1521,6 +1541,8 @@ p {
   background: var(--color-surface-muted);
   color: var(--color-text);
   font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
   text-decoration: none;
 }
 
@@ -1594,6 +1616,7 @@ p {
 .path-chip {
   display: inline-block;
   max-width: 100%;
+  min-width: 0;
   border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
   padding: 7px 10px;
@@ -1604,6 +1627,7 @@ p {
   font-size: 0.9rem;
   line-height: 1.5;
   overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .generation-preview {
@@ -2055,14 +2079,83 @@ p {
   }
 }
 
-@media (max-width: 380px) {
-  h1 {
-    font-size: 1.7rem;
+@media (max-width: 480px) {
+  .library-filter-controls {
+    padding: 10px;
   }
 
+  .library-filter-options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .library-filter-option {
+    width: 100%;
+  }
+
+  .library-filter-option small {
+    white-space: normal;
+  }
+
+  .library-totals div {
+    align-items: flex-start;
+  }
+
+  .library-totals dd {
+    text-align: left;
+  }
+
+  .book-metrics,
+  .book-card-footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .book-card-footer {
+    display: grid;
+    align-items: start;
+  }
+
+  .book-card-cta {
+    white-space: normal;
+  }
+
+  .library-empty .button-link,
+  .library-filter-empty-state .button-link,
+  .book-timeline-empty .button-link,
+  .book-detail-not-found .button-link,
+  .file-actions .button-link,
+  .form-actions .button-link {
+    width: 100%;
+    justify-self: stretch;
+    flex-basis: 100%;
+  }
+
+  .book-timeline-item-header > span {
+    justify-self: start;
+    white-space: normal;
+  }
+
+  .path-chip {
+    display: block;
+    width: 100%;
+  }
+
+  .json-preview {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+}
+
+@media (max-width: 430px) {
   .primary-nav-link,
   .button-link {
     flex-basis: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  h1 {
+    font-size: 1.7rem;
   }
 
   .book-metrics,
