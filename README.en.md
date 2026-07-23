@@ -90,10 +90,14 @@ Reading data is organized as JSON files within the repository:
 
 | Concept | Description |
 |---|---|
-| **Book** | Metadata of a book — title, author, total pages, category, genres |
-| **Strike** | A reading session — date, pages read, chapter, notes |
-| **Category** | Classification system to organize the library |
-| **Library** | Aggregated view of all registered books |
+| **Book** | Primary data in `data/books/`: book metadata and the declared reading snapshot, including `currentPage`, `status`, `startDate`, and `endDate` |
+| **Strike** | Primary data in `data/strikes/{book-slug}/`: a documented reading session, with date, page range, `pagesRead`, chapter, and notes |
+| **Category** | Primary data in `data/categories/`: reusable classification to organize books without duplicating metrics |
+| **Library** | Derived index in `data/library.json`: aggregated view of books, categories, and strikes, regenerable by script and not edited manually |
+
+`data/books/`, `data/categories/`, and `data/strikes/` are the primary sources. `data/library.json` exists to make the library easier to load, support validation, and expose aggregated metrics, but it can be deleted and recreated from the primary data.
+
+`currentPage` is the current position declared in the Book file. It may be ahead of the sessions already documented as strikes: a book can be at `currentPage: 209` and still have zero strikes, for example. `totalPagesRead`, both in the top-level Library index and in each aggregated book, only sums pages documented in Strike files.
 
 <details>
 <summary><strong>Minimal example (required fields)</strong></summary>
