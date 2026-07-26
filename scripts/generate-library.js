@@ -5,12 +5,18 @@ const path = require('path');
 
 const {
   DEFAULT_ROOT,
+  printWarnings,
   relativePath,
   validateJsonSchema,
   validateProject,
 } = require('./validate');
 
 function buildLibrary(rootDir = DEFAULT_ROOT) {
+  const validation = validateDataForLibraryGeneration(rootDir);
+  return buildLibraryFromValidation(validation);
+}
+
+function validateDataForLibraryGeneration(rootDir) {
   const validation = validateProject(rootDir, { includeLibrary: false });
 
   if (!validation.ok) {
@@ -18,6 +24,10 @@ function buildLibrary(rootDir = DEFAULT_ROOT) {
     throw new Error(`Cannot generate library from invalid data:\n${details}`);
   }
 
+  return validation;
+}
+
+function buildLibraryFromValidation(validation) {
   const books = Array.from(validation.data.books.values())
     .sort((left, right) => left.slug.localeCompare(right.slug))
     .map((book) => buildLibraryBook(book, validation.data.strikesByBook.get(book.slug) || []));
@@ -112,13 +122,14 @@ function deriveGeneratedAt(data) {
 }
 
 function writeLibrary(rootDir = DEFAULT_ROOT) {
-  const library = buildLibrary(rootDir);
+  const validation = validateDataForLibraryGeneration(rootDir);
+  const library = buildLibraryFromValidation(validation);
   const outputPath = path.join(rootDir, 'data', 'library.json');
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, `${JSON.stringify(library, null, 2)}\n`, 'utf8');
 
-  return { library, outputPath };
+  return { library, outputPath, warnings: validation.warnings };
 }
 
 function printGenerationResult(result, rootDir = DEFAULT_ROOT) {
@@ -128,6 +139,7 @@ function printGenerationResult(result, rootDir = DEFAULT_ROOT) {
   console.log(`Books: ${result.library.totalBooks}`);
   console.log(`Strikes: ${totalStrikes}`);
   console.log(`Total pages read: ${result.library.totalPagesRead}`);
+  printWarnings(result.warnings);
 }
 
 if (require.main === module) {

@@ -371,6 +371,7 @@ function scanSchemaKeywords(schema, location, errors) {
 function validateProject(rootDir = DEFAULT_ROOT, options = {}) {
   const includeLibrary = options.includeLibrary !== false;
   const errors = [];
+  const warnings = [];
 
   ensureDirectory(rootDir, path.join('schemas'), errors);
   ensureDirectory(rootDir, path.join('examples'), errors);
@@ -396,11 +397,15 @@ function validateProject(rootDir = DEFAULT_ROOT, options = {}) {
     }
 
     validateCrossReferences(data, errors);
+    collectCoherenceWarnings(data, warnings, rootDir);
   }
+
+  const sortedWarnings = [...warnings].sort(compareWarnings);
 
   return {
     ok: errors.length === 0,
     errors,
+    warnings: sortedWarnings,
     schemas,
     data,
     summary: {
@@ -413,6 +418,7 @@ function validateProject(rootDir = DEFAULT_ROOT, options = {}) {
         0
       ),
       libraryPresent: data.library !== null,
+      warnings: sortedWarnings.length,
     },
   };
 }
@@ -534,6 +540,104 @@ function validateCrossReferences(data, errors) {
   validatePageIntervalOverlaps(data, errors);
 }
 
+function collectCoherenceWarnings(data, warnings, rootDir) {
+  collectBookCoherenceWarnings(data, warnings, rootDir);
+  collectCategoryCoherenceWarnings(data, warnings, rootDir);
+  collectLatestStrikePageWarnings(data, warnings, rootDir);
+}
+
+function collectBookCoherenceWarnings(data, warnings, rootDir) {
+  for (const book of data.books.values()) {
+    const label = relativePath(rootDir, book.filePath);
+
+    if (book.data.status === 'completed' && !hasDateValue(book.data.endDate)) {
+      warnings.push(
+        createWarning({
+          code: 'completed-without-end-date',
+          filePath: label,
+          location: 'endDate',
+          message: 'Completed book does not declare an endDate.',
+        })
+      );
+    }
+
+    if (book.data.status === 'reading' && !hasDateValue(book.data.startDate)) {
+      warnings.push(
+        createWarning({
+          code: 'reading-without-start-date',
+          filePath: label,
+          location: 'startDate',
+          message: 'Reading book does not declare a startDate.',
+        })
+      );
+    }
+
+    if (
+      hasDateValue(book.data.startDate) &&
+      hasDateValue(book.data.endDate) &&
+      book.data.endDate < book.data.startDate
+    ) {
+      warnings.push(
+        createWarning({
+          code: 'end-date-before-start-date',
+          filePath: label,
+          location: 'endDate',
+          message: `endDate "${book.data.endDate}" is before startDate "${book.data.startDate}".`,
+        })
+      );
+    }
+  }
+}
+
+function collectCategoryCoherenceWarnings(data, warnings, rootDir) {
+  const usedCategorySlugs = new Set();
+
+  for (const book of data.books.values()) {
+    if (typeof book.data.category === 'string') {
+      usedCategorySlugs.add(book.data.category);
+    }
+  }
+
+  for (const category of data.categories.values()) {
+    if (!usedCategorySlugs.has(category.slug)) {
+      warnings.push(
+        createWarning({
+          code: 'category-without-books',
+          filePath: relativePath(rootDir, category.filePath),
+          location: 'slug',
+          message: `Category "${category.slug}" is valid but is not used by any book.`,
+        })
+      );
+    }
+  }
+}
+
+function collectLatestStrikePageWarnings(data, warnings, rootDir) {
+  for (const book of data.books.values()) {
+    const strikes = data.strikesByBook.get(book.slug) || [];
+    const latestStrike = getLatestStrike(strikes, rootDir);
+
+    if (
+      latestStrike &&
+      Number.isInteger(latestStrike.data.endPage) &&
+      Number.isInteger(book.data.currentPage) &&
+      latestStrike.data.endPage > book.data.currentPage
+    ) {
+      warnings.push(
+        createWarning({
+          code: 'strike-end-after-current-page',
+          filePath: relativePath(rootDir, latestStrike.filePath),
+          location: 'endPage',
+          relatedFile: relativePath(rootDir, book.filePath),
+          message:
+            `Latest strike ends at page ${latestStrike.data.endPage}, ` +
+            `but book currentPage is ${book.data.currentPage}.`,
+        })
+      );
+    }
+  }
+}
+
 function validateCategoryPaths(data, errors) {
   for (const category of data.categories.values()) {
     const label = relativePath(DEFAULT_ROOT, category.filePath);
@@ -638,6 +742,68 @@ function validatePageIntervalOverlaps(data, errors) {
   }
 }
 
+function createWarning({ code, filePath, location, message, relatedFile = null }) {
+  const warning = {
+    code,
+    filePath,
+    location,
+    message,
+  };
+
+  if (relatedFile) {
+    warning.relatedFile = relatedFile;
+  }
+
+  return warning;
+}
+
+function hasDateValue(value) {
+  return typeof value === 'string' && value.length > 0;
+}
+
+function getLatestStrike(strikes, rootDir) {
+  return [...strikes].sort((left, right) => compareStrikeChronology(left, right, rootDir)).at(-1);
+}
+
+function compareStrikeChronology(left, right, rootDir) {
+  const byDate = compareText(left.data.date || '', right.data.date || '');
+
+  if (byDate !== 0) {
+    return byDate;
+  }
+
+  return compareText(relativePath(rootDir, left.filePath), relativePath(rootDir, right.filePath));
+}
+
+function compareWarnings(left, right) {
+  const keys = ['code', 'filePath', 'location', 'relatedFile', 'message'];
+
+  for (const key of keys) {
+    const result = compareText(left[key] || '', right[key] || '');
+
+    if (result !== 0) {
+      return result;
+    }
+  }
+
+  return 0;
+}
+
+function compareText(left, right) {
+  const leftText = String(left);
+  const rightText = String(right);
+
+  if (leftText < rightText) {
+    return -1;
+  }
+
+  if (leftText > rightText) {
+    return 1;
+  }
+
+  return 0;
+}
+
 function trySlugify(value, label, errors) {
   try {
     return slugify(value);
@@ -659,6 +825,24 @@ function isStrikeFileDateCoherent(fileStem, date) {
   return /^[1-9]\d*$/.test(fileStem.slice(date.length + 1));
 }
 
+function formatWarning(warning) {
+  const relatedFile = warning.relatedFile ? ` Related file: ${warning.relatedFile}.` : '';
+
+  return `[${warning.code}] ${warning.filePath} (${warning.location}): ${warning.message}${relatedFile}`;
+}
+
+function printWarnings(warnings) {
+  if (!Array.isArray(warnings) || warnings.length === 0) {
+    return;
+  }
+
+  console.log(`Validation completed with ${warnings.length} warning(s):`);
+
+  for (const warning of warnings) {
+    console.log(`- ${formatWarning(warning)}`);
+  }
+}
+
 function printReport(report) {
   if (report.ok) {
     console.log('Validation OK');
@@ -668,6 +852,8 @@ function printReport(report) {
     console.log(`Categories: ${report.summary.categories}`);
     console.log(`Strikes: ${report.summary.strikes}`);
     console.log(`Library present: ${report.summary.libraryPresent ? 'yes' : 'no'}`);
+    console.log(`Warnings: ${report.summary.warnings}`);
+    printWarnings(report.warnings);
     return;
   }
 
@@ -676,6 +862,8 @@ function printReport(report) {
   for (const error of report.errors) {
     console.error(`- ${error}`);
   }
+
+  printWarnings(report.warnings);
 }
 
 if (require.main === module) {
@@ -689,6 +877,8 @@ if (require.main === module) {
 
 module.exports = {
   DEFAULT_ROOT,
+  formatWarning,
+  printWarnings,
   readJsonFile,
   relativePath,
   validateJsonSchema,
