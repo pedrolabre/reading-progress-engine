@@ -221,7 +221,8 @@ reading-progress-engine/
         |   |-- JsonPreview.jsx
         |   |-- LibraryFilterControls.jsx
         |   |-- LibraryGrid.jsx
-        |   `-- LibrarySortControls.jsx
+        |   |-- LibrarySortControls.jsx
+        |   `-- ReferenceModeControl.jsx
         |-- pages/
         |   |-- BookDetailPage.jsx
         |   |-- BookFormPage.jsx

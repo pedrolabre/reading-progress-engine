@@ -4,18 +4,35 @@ import CopyButton from '../components/CopyButton.jsx';
 import DownloadButton from '../components/DownloadButton.jsx';
 import FileInfo from '../components/FileInfo.jsx';
 import JsonPreview from '../components/JsonPreview.jsx';
+import ReferenceModeControl from '../components/ReferenceModeControl.jsx';
 import {
   BOOK_STATUS_OPTIONS,
   INITIAL_BOOK_FORM_VALUES,
   createBookFormOutput,
 } from '../utils/bookForm.js';
+import { LIBRARY_LOAD_STATUS, loadLibraryData } from '../utils/libraryLoader.js';
+
+const REFERENCE_MODES = {
+  EXISTING: 'existing',
+  MANUAL: 'manual',
+};
 
 function BookFormPage() {
+  const libraryState = useMemo(() => loadLibraryData(), []);
+  const categoryOptions = useMemo(() => createCategoryOptions(libraryState), [libraryState]);
   const [values, setValues] = useState(INITIAL_BOOK_FORM_VALUES);
+  const [categoryMode, setCategoryMode] = useState(() =>
+    categoryOptions.length > 0 ? REFERENCE_MODES.EXISTING : REFERENCE_MODES.MANUAL
+  );
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const output = useMemo(() => createBookFormOutput(values), [values]);
   const errorEntries = Object.entries(output.errors);
+  const activeCategoryMode =
+    categoryOptions.length > 0 ? categoryMode : REFERENCE_MODES.MANUAL;
+  const selectedCategoryValue = categoryOptions.some((option) => option.slug === values.category)
+    ? values.category
+    : '';
 
   function updateField(field, value) {
     setValues((current) => ({
@@ -42,8 +59,24 @@ function BookFormPage() {
 
   function handleReset() {
     setValues(INITIAL_BOOK_FORM_VALUES);
+    setCategoryMode(
+      categoryOptions.length > 0 ? REFERENCE_MODES.EXISTING : REFERENCE_MODES.MANUAL
+    );
     setTouched({});
     setSubmitted(false);
+  }
+
+  function updateCategoryMode(mode) {
+    setCategoryMode(mode);
+    setValues((current) => ({
+      ...current,
+      category:
+        mode === REFERENCE_MODES.EXISTING &&
+        !categoryOptions.some((option) => option.slug === current.category)
+          ? ''
+          : current.category,
+    }));
+    touchField('category');
   }
 
   function applyCompletedCurrentPage() {
@@ -180,18 +213,48 @@ function BookFormPage() {
               id="category"
               label="Categoria"
               error={getVisibleError('category')}
-              hint="Slug principal, ex: fantasy"
+              hint={
+                activeCategoryMode === REFERENCE_MODES.EXISTING
+                  ? 'O JSON grava o slug da categoria selecionada'
+                  : 'Slug principal, ex: fantasy'
+              }
               required
             >
-              <input
-                autoComplete="off"
-                onBlur={() => touchField('category')}
-                onChange={(event) => updateField('category', event.target.value)}
-                placeholder="fantasy"
-                type="text"
-                value={values.category}
-              />
+              {activeCategoryMode === REFERENCE_MODES.EXISTING ? (
+                <select
+                  onBlur={() => touchField('category')}
+                  onChange={(event) => updateField('category', event.target.value)}
+                  value={selectedCategoryValue}
+                >
+                  <option value="">Selecione uma categoria</option>
+                  {categoryOptions.map((option) => (
+                    <option key={option.slug} value={option.slug}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  autoComplete="off"
+                  onBlur={() => touchField('category')}
+                  onChange={(event) => updateField('category', event.target.value)}
+                  placeholder="fantasy"
+                  type="text"
+                  value={values.category}
+                />
+              )}
             </Field>
+
+            <ReferenceModeControl
+              availableCount={categoryOptions.length}
+              emptyMessage="Nenhuma categoria carregada de data/categories/."
+              existingLabel="Selecionar existente"
+              id="category-reference-mode"
+              loadError={getLibraryLoadError(libraryState)}
+              manualLabel="Informar slug manualmente"
+              mode={activeCategoryMode}
+              onChange={updateCategoryMode}
+            />
 
             <Field
               id="genres"
@@ -383,6 +446,29 @@ function BookFormPage() {
       </section>
     </section>
   );
+}
+
+function createCategoryOptions(libraryState) {
+  if (libraryState.status !== LIBRARY_LOAD_STATUS.SUCCESS) {
+    return [];
+  }
+
+  return libraryState.data.categories.map((category) => {
+    const name = category.data.name || category.slug;
+
+    return {
+      label: `${name} (${category.slug})`,
+      slug: category.slug,
+    };
+  });
+}
+
+function getLibraryLoadError(libraryState) {
+  if (libraryState.status !== LIBRARY_LOAD_STATUS.ERROR) {
+    return '';
+  }
+
+  return libraryState.error.message;
 }
 
 function Field({ children, error, hint, id, label, required = false, wide = false }) {

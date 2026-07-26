@@ -1711,6 +1711,99 @@ p {
   font-weight: 700;
 }
 
+.reference-mode-control {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-2);
+  margin: 0;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  background: var(--color-surface-muted);
+  box-shadow: 3px 3px 0 var(--color-shadow);
+}
+
+.reference-mode-control legend {
+  padding: 0 4px;
+  color: var(--color-text);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.reference-mode-options {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.reference-mode-options label {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  min-width: min(100%, 210px);
+  max-width: 100%;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  background: var(--color-surface);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.reference-mode-options label.is-active {
+  background: var(--color-accent);
+}
+
+.reference-mode-options label:focus-within {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+  box-shadow: var(--focus-ring);
+}
+
+.reference-mode-options input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--color-accent-strong);
+}
+
+.reference-mode-options input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.reference-mode-options span,
+.reference-mode-options small {
+  min-width: 0;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+
+.reference-mode-options small {
+  justify-self: end;
+  color: var(--color-muted);
+  font-size: 0.66rem;
+  white-space: nowrap;
+}
+
+.reference-empty-note {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
 .color-control-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 48px;

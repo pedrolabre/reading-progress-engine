@@ -4,17 +4,33 @@ import CopyButton from '../components/CopyButton.jsx';
 import DownloadButton from '../components/DownloadButton.jsx';
 import FileInfo from '../components/FileInfo.jsx';
 import JsonPreview from '../components/JsonPreview.jsx';
+import ReferenceModeControl from '../components/ReferenceModeControl.jsx';
+import { LIBRARY_LOAD_STATUS, loadLibraryData } from '../utils/libraryLoader.js';
 import {
   createInitialStrikeFormValues,
   createStrikeFormOutput,
 } from '../utils/strikeForm.js';
 
+const REFERENCE_MODES = {
+  EXISTING: 'existing',
+  MANUAL: 'manual',
+};
+
 function StrikeFormPage() {
+  const libraryState = useMemo(() => loadLibraryData(), []);
+  const bookOptions = useMemo(() => createBookOptions(libraryState), [libraryState]);
   const [values, setValues] = useState(() => createInitialStrikeFormValues());
+  const [bookMode, setBookMode] = useState(() =>
+    bookOptions.length > 0 ? REFERENCE_MODES.EXISTING : REFERENCE_MODES.MANUAL
+  );
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const output = useMemo(() => createStrikeFormOutput(values), [values]);
   const errorEntries = Object.entries(output.errors);
+  const activeBookMode = bookOptions.length > 0 ? bookMode : REFERENCE_MODES.MANUAL;
+  const selectedBookValue = bookOptions.some((option) => option.slug === values.book)
+    ? values.book
+    : '';
 
   function updateField(field, value) {
     setValues((current) => ({
@@ -45,8 +61,22 @@ function StrikeFormPage() {
 
   function handleReset() {
     setValues(createInitialStrikeFormValues());
+    setBookMode(bookOptions.length > 0 ? REFERENCE_MODES.EXISTING : REFERENCE_MODES.MANUAL);
     setTouched({});
     setSubmitted(false);
+  }
+
+  function updateBookMode(mode) {
+    setBookMode(mode);
+    setValues((current) => ({
+      ...current,
+      book:
+        mode === REFERENCE_MODES.EXISTING &&
+        !bookOptions.some((option) => option.slug === current.book)
+          ? ''
+          : current.book,
+    }));
+    touchField('book');
   }
 
   return (
@@ -84,18 +114,48 @@ function StrikeFormPage() {
               id="book"
               label="Livro"
               error={getVisibleError('book')}
-              hint="Slug do livro, ex: dune"
+              hint={
+                activeBookMode === REFERENCE_MODES.EXISTING
+                  ? 'O JSON grava o slug do livro selecionado'
+                  : 'Slug do livro, ex: dune'
+              }
               required
             >
-              <input
-                autoComplete="off"
-                onBlur={() => touchField('book')}
-                onChange={(event) => updateField('book', event.target.value)}
-                placeholder="dune"
-                type="text"
-                value={values.book}
-              />
+              {activeBookMode === REFERENCE_MODES.EXISTING ? (
+                <select
+                  onBlur={() => touchField('book')}
+                  onChange={(event) => updateField('book', event.target.value)}
+                  value={selectedBookValue}
+                >
+                  <option value="">Selecione um livro</option>
+                  {bookOptions.map((option) => (
+                    <option key={option.slug} value={option.slug}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  autoComplete="off"
+                  onBlur={() => touchField('book')}
+                  onChange={(event) => updateField('book', event.target.value)}
+                  placeholder="dune"
+                  type="text"
+                  value={values.book}
+                />
+              )}
             </Field>
+
+            <ReferenceModeControl
+              availableCount={bookOptions.length}
+              emptyMessage="Nenhum livro carregado de data/books/."
+              existingLabel="Selecionar existente"
+              id="book-reference-mode"
+              loadError={getLibraryLoadError(libraryState)}
+              manualLabel="Informar slug manualmente"
+              mode={activeBookMode}
+              onChange={updateBookMode}
+            />
 
             <Field
               id="date"
@@ -283,6 +343,29 @@ function StrikeFormPage() {
       </section>
     </section>
   );
+}
+
+function createBookOptions(libraryState) {
+  if (libraryState.status !== LIBRARY_LOAD_STATUS.SUCCESS) {
+    return [];
+  }
+
+  return libraryState.data.books.map((book) => {
+    const title = book.data.title || book.slug;
+
+    return {
+      label: `${title} (${book.slug})`,
+      slug: book.slug,
+    };
+  });
+}
+
+function getLibraryLoadError(libraryState) {
+  if (libraryState.status !== LIBRARY_LOAD_STATUS.ERROR) {
+    return '';
+  }
+
+  return libraryState.error.message;
 }
 
 function Field({ children, error, hint, id, label, required = false, wide = false }) {
