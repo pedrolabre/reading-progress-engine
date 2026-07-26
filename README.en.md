@@ -179,7 +179,7 @@ Reading data is organized as JSON files within the repository:
 The application serves two purposes:
 
 1. **Data generation** — Forms that produce valid JSON files, with the correct name, path, and structure. You fill out the form, the app generates the file, and you commit it manually.
-2. **Data visualization** — The app reads all JSON files from the repository and builds an interactive visual library. Sorting, filtering, and exploring are the responsibility of the application — they are not stored in the data files.
+2. **Data visualization** — The app reads all JSON files from the repository and builds an interactive visual library. Sorting, filtering, and exploring are the responsibility of the application — they are not stored in the data files. The library view syncs filters and sorting with the URL, allowing an exploration state to be shared or restored through query params.
 
 ### ✍️ The commit is manual
 
@@ -242,6 +242,7 @@ reading-progress-engine/
             |-- libraryLoader.js
             |-- libraryMetrics.js
             |-- librarySorting.js
+            |-- libraryUrlState.js
             |-- slugify.js
             `-- strikeForm.js
 ```

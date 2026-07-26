@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useState } from 'react';
-import { Link, NavLink, Route, Routes } from 'react-router';
+import { Link, NavLink, Route, Routes, useSearchParams } from 'react-router';
 
 import LibraryFilterControls from './components/LibraryFilterControls.jsx';
 import LibraryGrid from './components/LibraryGrid.jsx';
@@ -18,16 +18,19 @@ import {
   createEmptyLibraryFilters,
   createLibraryFilterOptions,
   filterLibraryBooks,
-  normalizeLibraryFilters,
   toggleLibraryFilterValue,
 } from './utils/libraryFilters.js';
 import { createLibraryMetrics } from './utils/libraryMetrics.js';
 import {
-  DEFAULT_LIBRARY_SORT_ID,
   LIBRARY_SORT_OPTIONS,
   getLibrarySortOption,
   sortLibraryBooks,
 } from './utils/librarySorting.js';
+import {
+  createLibrarySearchParams,
+  parseLibraryUrlState,
+  validateLibraryUrlFilters,
+} from './utils/libraryUrlState.js';
 
 const navItems = [
   { to: '/', label: 'Biblioteca', end: true },
@@ -80,22 +83,24 @@ function App() {
 }
 
 function LibraryPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [libraryState, setLibraryState] = useState(() => createLibraryLoadingState());
-  const [librarySortId, setLibrarySortId] = useState(DEFAULT_LIBRARY_SORT_ID);
-  const [libraryFilters, setLibraryFilters] = useState(() => createEmptyLibraryFilters());
+  const libraryUrlState = parseLibraryUrlState(searchParams);
+  const currentLibrarySearch = searchParams.toString();
+  const canonicalLibrarySearch = createLibrarySearchParams(libraryUrlState).toString();
 
   useEffect(() => {
     setLibraryState(loadLibraryData());
   }, []);
 
-  function handleLibraryFilterToggle(groupId, value) {
-    setLibraryFilters((currentFilters) =>
-      toggleLibraryFilterValue(currentFilters, groupId, value)
-    );
-  }
+  useEffect(() => {
+    if (canonicalLibrarySearch !== currentLibrarySearch) {
+      setSearchParams(canonicalLibrarySearch, { replace: true });
+    }
+  }, [canonicalLibrarySearch, currentLibrarySearch, setSearchParams]);
 
-  function handleLibraryFiltersClear() {
-    setLibraryFilters(createEmptyLibraryFilters());
+  function handleLibraryUrlStateChange(nextUrlState) {
+    setSearchParams(createLibrarySearchParams(nextUrlState), { replace: true });
   }
 
   return (
@@ -115,24 +120,18 @@ function LibraryPage() {
       }
     >
       <LibraryView
-        libraryFilters={libraryFilters}
         libraryState={libraryState}
-        librarySortId={librarySortId}
-        onLibraryFilterToggle={handleLibraryFilterToggle}
-        onLibraryFiltersClear={handleLibraryFiltersClear}
-        onLibrarySortChange={setLibrarySortId}
+        libraryUrlState={libraryUrlState}
+        onLibraryUrlStateChange={handleLibraryUrlStateChange}
       />
     </Page>
   );
 }
 
 function LibraryView({
-  libraryFilters,
   libraryState,
-  librarySortId,
-  onLibraryFilterToggle,
-  onLibraryFiltersClear,
-  onLibrarySortChange,
+  libraryUrlState,
+  onLibraryUrlStateChange,
 }) {
   if (libraryState.status === LIBRARY_LOAD_STATUS.LOADING) {
     return (
@@ -184,12 +183,33 @@ function LibraryView({
   const data = libraryState.data;
   const runtimeMetrics = createLibraryMetrics(data);
   const warnings = [...data.warnings, ...runtimeMetrics.warnings];
-  const activeSortOption = getLibrarySortOption(librarySortId);
-  const activeFilters = normalizeLibraryFilters(libraryFilters);
-  const activeFilterCount = countActiveLibraryFilters(activeFilters);
+  const activeSortOption = getLibrarySortOption(libraryUrlState.sortId);
   const filterOptions = createLibraryFilterOptions(runtimeMetrics.books);
+  const activeFilters = validateLibraryUrlFilters(libraryUrlState.filters, filterOptions);
+  const activeFilterCount = countActiveLibraryFilters(activeFilters);
   const filteredBooks = filterLibraryBooks(runtimeMetrics.books, activeFilters);
   const sortedBooks = sortLibraryBooks(filteredBooks, activeSortOption.id);
+
+  function handleLibrarySortChange(sortId) {
+    onLibraryUrlStateChange({
+      sortId: getLibrarySortOption(sortId).id,
+      filters: activeFilters,
+    });
+  }
+
+  function handleLibraryFilterToggle(groupId, value) {
+    onLibraryUrlStateChange({
+      sortId: activeSortOption.id,
+      filters: toggleLibraryFilterValue(activeFilters, groupId, value),
+    });
+  }
+
+  function handleLibraryFiltersClear() {
+    onLibraryUrlStateChange({
+      sortId: activeSortOption.id,
+      filters: createEmptyLibraryFilters(),
+    });
+  }
 
   return (
     <section className="library-surface" aria-labelledby="library-grid-title">
@@ -207,7 +227,7 @@ function LibraryView({
             activeOption={activeSortOption}
             options={LIBRARY_SORT_OPTIONS}
             sortId={activeSortOption.id}
-            onSortChange={onLibrarySortChange}
+            onSortChange={handleLibrarySortChange}
           />
         </div>
       </header>
@@ -234,14 +254,14 @@ function LibraryView({
           groups={filterOptions}
           resultCount={filteredBooks.length}
           totalCount={runtimeMetrics.books.length}
-          onClearFilters={onLibraryFiltersClear}
-          onToggleFilter={onLibraryFilterToggle}
+          onClearFilters={handleLibraryFiltersClear}
+          onToggleFilter={handleLibraryFilterToggle}
         />
       ) : null}
 
       <div className="library-results" id="library-results">
         {sortedBooks.length === 0 && activeFilterCount > 0 ? (
-          <LibraryNoFilterMatches onClearFilters={onLibraryFiltersClear} />
+          <LibraryNoFilterMatches onClearFilters={handleLibraryFiltersClear} />
         ) : (
           <LibraryGrid books={sortedBooks} />
         )}

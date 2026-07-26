@@ -179,7 +179,7 @@ Os dados de leitura são organizados como arquivos JSON dentro do repositório:
 A aplicação tem dois propósitos:
 
 1. **Geração de dados** — Formulários que produzem arquivos JSON válidos, com o nome correto, caminho e estrutura. Você preenche o formulário, o app gera o arquivo, e você faz o commit manualmente.
-2. **Visualização de dados** — O app lê todos os arquivos JSON do repositório e constrói uma biblioteca visual interativa. Ordenação, filtros e exploração são responsabilidade da aplicação — não ficam armazenados nos arquivos de dados.
+2. **Visualização de dados** — O app lê todos os arquivos JSON do repositório e constrói uma biblioteca visual interativa. Ordenação, filtros e exploração são responsabilidade da aplicação — não ficam armazenados nos arquivos de dados. A visualização da biblioteca sincroniza filtros e ordenação com a URL, permitindo compartilhar ou restaurar a exploração por query params.
 
 ### ✍️ O commit é manual
 
@@ -242,6 +242,7 @@ reading-progress-engine/
             |-- libraryLoader.js
             |-- libraryMetrics.js
             |-- librarySorting.js
+            |-- libraryUrlState.js
             |-- slugify.js
             `-- strikeForm.js
 ```
