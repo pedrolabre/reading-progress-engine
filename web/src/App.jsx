@@ -217,7 +217,10 @@ function LibraryView({
         <div>
           <p className="panel-label">Acervo local</p>
           <h2 id="library-grid-title">Livros registrados</h2>
-          <p>Progresso e atividade calculados a partir dos seus strikes.</p>
+          <p>
+            Progresso declarado vem dos arquivos de Book; paginas e sessoes
+            documentadas vem dos Strikes.
+          </p>
         </div>
         <div className="library-header-actions">
           <div className="library-context" aria-label="Contexto da biblioteca">
@@ -234,11 +237,11 @@ function LibraryView({
 
       <dl className="library-totals" aria-label="Resumo da biblioteca">
         <div>
-          <dt>Strikes</dt>
+          <dt>Sessoes documentadas</dt>
           <dd>{runtimeMetrics.summary.totalStrikes}</dd>
         </div>
         <div>
-          <dt>Paginas lidas</dt>
+          <dt>Paginas documentadas</dt>
           <dd>{runtimeMetrics.summary.totalPagesRead}</dd>
         </div>
         <div>

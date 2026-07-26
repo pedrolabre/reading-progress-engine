@@ -10,7 +10,11 @@ function BookDetail({ detail }) {
         <header className="book-detail-section-header">
           <div>
             <p className="panel-label">Resumo do livro</p>
-            <h2 id="book-detail-summary-title">Progresso registrado</h2>
+            <h2 id="book-detail-summary-title">Progresso declarado</h2>
+            <p>
+              Baseado na pagina atual declarada no Book, separado das sessoes
+              documentadas em strikes.
+            </p>
           </div>
           <div className="book-detail-badges">
             <span className={`book-badge book-status book-status-${detail.status.value}`}>
@@ -27,7 +31,10 @@ function BookDetail({ detail }) {
           </div>
         </header>
 
-        <div className="book-detail-progress" aria-label={`Progresso de ${detail.title}`}>
+        <div
+          className="book-detail-progress"
+          aria-label={`Progresso declarado de ${detail.title}`}
+        >
           <div className="book-detail-progress-heading">
             <span>{detail.progress.pageSummary}</span>
             <strong>{detail.progress.label}</strong>
@@ -35,7 +42,7 @@ function BookDetail({ detail }) {
           <div
             className="book-progress-track"
             role="progressbar"
-            aria-label={`Progresso de leitura de ${detail.title}`}
+            aria-label={`Progresso declarado de leitura de ${detail.title}`}
             aria-valuemin={0}
             aria-valuemax={detail.progress.totalPages}
             aria-valuenow={detail.progress.currentPage}

@@ -26,8 +26,8 @@ export const LIBRARY_SORT_OPTIONS = [
   },
   {
     id: LIBRARY_SORT.PROGRESS_DESC,
-    label: 'Progresso',
-    activeText: 'Ordem ativa: maior progresso primeiro',
+    label: 'Progresso declarado',
+    activeText: 'Ordem ativa: maior progresso declarado primeiro',
   },
   {
     id: LIBRARY_SORT.STATUS,

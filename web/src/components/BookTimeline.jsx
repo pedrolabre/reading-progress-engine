@@ -7,7 +7,7 @@ function BookTimeline({ entries = [], title }) {
       <header className="book-detail-section-header">
         <div>
           <p className="panel-label">Timeline</p>
-          <h2 id="book-timeline-title">Strikes em ordem cronologica</h2>
+          <h2 id="book-timeline-title">Sessoes documentadas em ordem cronologica</h2>
           <p>{formatTimelineCount(entries.length)}</p>
         </div>
         <Link className="button-link" to="/new/strike">
@@ -21,14 +21,15 @@ function BookTimeline({ entries = [], title }) {
             0
           </span>
           <div>
-            <h3>Nenhum strike registrado</h3>
+            <h3>Nenhuma sessao documentada</h3>
             <p>
-              Este livro ainda nao tem sessoes em <code>data/strikes</code>. Gere
-              um strike, salve no caminho indicado e faca o commit manualmente.
+              Este livro ainda nao tem sessoes documentadas em{' '}
+              <code>data/strikes</code>. Gere um strike, salve no caminho indicado
+              e faca o commit manualmente.
             </p>
           </div>
           <Link className="button-link button-link-primary" to="/new/strike">
-            Registrar strike
+            Registrar sessao
           </Link>
         </div>
       ) : (
@@ -48,7 +49,7 @@ function BookTimeline({ entries = [], title }) {
                   <div
                     className="book-progress-track"
                     role="progressbar"
-                    aria-label={`Progresso depois do strike de ${entry.dateLabel}`}
+                    aria-label={`Posicao documentada apos a sessao de ${entry.dateLabel}`}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-valuenow={entry.progressValue}
@@ -64,7 +65,7 @@ function BookTimeline({ entries = [], title }) {
 
                 <dl className="book-timeline-facts">
                   <div>
-                    <dt>Paginas</dt>
+                    <dt>Intervalo documentado</dt>
                     <dd>{entry.pageRangeLabel}</dd>
                   </div>
                   {entry.durationLabel ? (
@@ -93,10 +94,12 @@ function BookTimeline({ entries = [], title }) {
 
 function formatTimelineCount(count) {
   if (count === 0) {
-    return 'Nenhum strike para este livro.';
+    return 'Nenhuma sessao documentada para este livro.';
   }
 
-  return count === 1 ? '1 strike registrado.' : `${count} strikes registrados.`;
+  return count === 1
+    ? '1 sessao documentada.'
+    : `${count} sessoes documentadas.`;
 }
 
 export default BookTimeline;

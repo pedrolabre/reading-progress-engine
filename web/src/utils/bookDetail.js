@@ -70,12 +70,12 @@ export function createTimelineEntries(strikes = [], totalPages = 0) {
       date: data.date || '',
       dateLabel: formatDate(data.date),
       pageRangeLabel: formatPageRange(data.startPage, data.endPage),
-      pagesReadLabel: `${formatNumber(data.pagesRead)} paginas`,
+      pagesReadLabel: `${formatNumber(data.pagesRead)} paginas documentadas`,
       chapter: normalizeOptionalText(data.chapter),
       durationLabel: formatDuration(data.duration),
       mood: normalizeOptionalText(data.mood),
       notes: normalizeOptionalText(data.notes),
-      progressLabel: `${formatPercentage(progressValue)} do livro`,
+      progressLabel: `${formatPercentage(progressValue)} do livro pela pagina final documentada`,
       progressValue,
     };
   });
@@ -117,7 +117,7 @@ function createProgressDetail(metrics) {
     totalPages,
     currentPageLabel: formatNumber(currentPage),
     totalPagesLabel: formatNumber(totalPages),
-    pageSummary: `${formatNumber(currentPage)} de ${formatNumber(totalPages)} paginas`,
+    pageSummary: `Pagina atual: ${formatNumber(currentPage)} de ${formatNumber(totalPages)} paginas`,
   };
 }
 
@@ -141,29 +141,29 @@ function createActivityDetail(activityDates) {
 function createMetricCards(metrics, activity) {
   return [
     {
-      label: 'Progresso',
+      label: 'Progresso declarado',
       value: formatPercentage(metrics.progress),
-      detail: `${formatNumber(metrics.currentPage)} paginas atuais`,
+      detail: 'Percentual pela pagina atual do Book',
     },
     {
-      label: 'Paginas lidas',
+      label: 'Paginas documentadas',
       value: formatNumber(metrics.totalPagesRead),
-      detail: `${formatNumber(metrics.totalPages)} paginas no livro`,
+      detail: 'Soma de pagesRead dos strikes',
     },
     {
-      label: 'Strikes',
+      label: 'Sessoes documentadas',
       value: formatNumber(metrics.totalStrikes),
-      detail: `${formatNumber(metrics.averagePagesPerStrike)} paginas por strike`,
+      detail: `${formatNumber(metrics.averagePagesPerStrike)} paginas por sessao`,
     },
     {
-      label: 'Primeira atividade',
-      value: activity.firstActivityLabel,
-      detail: 'Inicio registrado',
+      label: 'Primeira sessao',
+      value: activity.firstStrikeLabel,
+      detail: 'Primeiro strike documentado',
     },
     {
-      label: 'Ultima atividade',
-      value: activity.lastActivityLabel,
-      detail: 'Atividade mais recente',
+      label: 'Ultima sessao',
+      value: activity.lastStrikeLabel,
+      detail: 'Ultimo strike documentado',
     },
   ];
 }
@@ -182,8 +182,14 @@ function createMetadataItems(book, status, category, activity) {
     createMetadataItem('ISBN', data.isbn),
     createMetadataItem('Inicio', data.startDate ? activity.startDateLabel : ''),
     createMetadataItem('Fim', hasOwn(data, 'endDate') ? activity.endDateLabel : ''),
-    createMetadataItem('Primeiro strike', activity.firstStrike ? activity.firstStrikeLabel : ''),
-    createMetadataItem('Ultimo strike', activity.lastStrike ? activity.lastStrikeLabel : ''),
+    createMetadataItem(
+      'Primeira sessao documentada',
+      activity.firstStrike ? activity.firstStrikeLabel : ''
+    ),
+    createMetadataItem(
+      'Ultima sessao documentada',
+      activity.lastStrike ? activity.lastStrikeLabel : ''
+    ),
     createMetadataItem('Capa', data.coverUrl, 'link'),
   ]);
 }

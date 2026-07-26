@@ -60,19 +60,19 @@ function BookCard({ book }) {
         <p>{author}</p>
       </div>
 
-      <section className="book-progress" aria-label={`Progresso de ${title}`}>
+      <section className="book-progress" aria-label={`Progresso declarado de ${title}`}>
         <div className="book-progress-heading">
-          <span>Progresso</span>
+          <span>Progresso declarado</span>
           <strong>{progressText}</strong>
         </div>
         <div
           className="book-progress-track"
           role="progressbar"
-          aria-label={`Progresso de leitura de ${title}`}
+          aria-label={`Progresso declarado de leitura de ${title}`}
           aria-valuemin={0}
           aria-valuemax={metrics.totalPages}
           aria-valuenow={metrics.currentPage}
-          aria-valuetext={`${progressText}; pagina ${metrics.currentPage} de ${metrics.totalPages}`}
+          aria-valuetext={`${progressText}; pagina atual ${metrics.currentPage} de ${metrics.totalPages}`}
         >
           <span
             className="book-progress-value"
@@ -80,6 +80,7 @@ function BookCard({ book }) {
           />
         </div>
         <p className="book-page-count">
+          <span>Pagina atual: </span>
           <strong>{numberFormatter.format(metrics.currentPage)}</strong>
           <span> de {numberFormatter.format(metrics.totalPages)} paginas</span>
         </p>
@@ -87,18 +88,18 @@ function BookCard({ book }) {
 
       <dl className="book-metrics" aria-label={`Metricas de ${title}`}>
         <div>
-          <dt>Strikes</dt>
+          <dt>Sessoes documentadas</dt>
           <dd>{numberFormatter.format(metrics.totalStrikes)}</dd>
         </div>
         <div>
-          <dt>Paginas lidas</dt>
+          <dt>Paginas documentadas</dt>
           <dd>{numberFormatter.format(metrics.totalPagesRead)}</dd>
         </div>
       </dl>
 
       <footer className="book-card-footer">
         <div>
-          <span className="book-activity-label">Ultima atividade</span>
+          <span className="book-activity-label">Ultimo registro</span>
           <strong>{formatActivityDate(lastActivityDate)}</strong>
         </div>
         <span className="book-card-cta" aria-hidden="true">
@@ -111,7 +112,7 @@ function BookCard({ book }) {
 
 function formatActivityDate(date) {
   if (!date) {
-    return 'Sem atividade registrada';
+    return 'Sem data registrada';
   }
 
   const parsedDate = new Date(`${date}T00:00:00Z`);
