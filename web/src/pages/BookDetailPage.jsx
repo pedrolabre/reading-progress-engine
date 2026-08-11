@@ -37,20 +37,12 @@ function BookDetailPage() {
   }
 
   return (
-    <section className="page-layout" aria-labelledby="book-detail-page-title">
-      <div className="page-header">
+    <section className="page-layout book-detail-page" aria-labelledby="book-detail-page-title">
+      <div className="page-header book-detail-page-header">
         <div className="page-copy">
           <p className="eyebrow">Livro</p>
           <h1 id="book-detail-page-title">{detail.title}</h1>
-          <p className="page-description">{detail.author}</p>
-        </div>
-        <div className="page-actions">
-          <Link className="button-link" to="/">
-            Biblioteca
-          </Link>
-          <Link className="button-link button-link-primary" to="/new/strike">
-            Novo strike
-          </Link>
+          <p className="page-description book-detail-author">{detail.author}</p>
         </div>
       </div>
 

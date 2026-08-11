@@ -1,0 +1,223 @@
+.book-detail-page {
+  gap: 8px;
+}
+
+.book-detail-page .book-detail-layout {
+  gap: 8px;
+}
+
+.book-detail-page .book-detail-summary,
+.book-detail-page .book-detail-panel,
+.book-detail-page .book-timeline {
+  padding: 8px;
+  box-shadow: 3px 3px 0 var(--color-shadow);
+}
+
+.book-detail-page .book-detail-summary {
+  gap: 6px;
+}
+
+.book-detail-page .book-detail-section-header {
+  gap: 6px;
+}
+
+.book-detail-page .book-detail-section-header .panel-label,
+.book-detail-page .book-detail-section-header h2,
+.book-detail-page .book-detail-section-header p {
+  margin: 0;
+}
+
+.book-detail-page .book-detail-section-header h2 {
+  font-size: 1rem;
+  line-height: 1.05;
+}
+
+.book-detail-page .book-detail-summary .book-detail-section-header > div > p:not(.panel-label) {
+  font-size: 0.74rem;
+  line-height: 1.25;
+}
+
+.book-detail-page .book-detail-progress {
+  gap: 4px;
+}
+
+.book-detail-page .book-detail-progress-heading span {
+  font-size: 0.66rem;
+}
+
+.book-detail-page .book-detail-progress-heading strong {
+  font-size: 0.98rem;
+}
+
+.book-detail-page .book-detail-metrics {
+  gap: 4px;
+}
+
+.book-detail-page .book-detail-metrics div,
+.book-detail-page .book-detail-metadata div,
+.book-detail-page .book-timeline-facts div {
+  padding: 5px;
+}
+
+.book-detail-page .book-detail-metrics dt,
+.book-detail-page .book-detail-metadata dt,
+.book-detail-page .book-timeline-facts dt {
+  font-size: 0.55rem;
+}
+
+.book-detail-page .book-detail-metrics dd {
+  font-size: 0.84rem;
+}
+
+.book-detail-page .book-detail-metrics span {
+  margin-top: 1px;
+  font-size: 0.58rem;
+  line-height: 1.15;
+}
+
+.book-detail-page .book-detail-metadata {
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.book-detail-page .book-detail-metadata dd {
+  margin-top: 1px;
+  font-size: 0.78rem;
+  line-height: 1.18;
+}
+
+.book-detail-page .book-detail-metadata code,
+.book-detail-page .book-detail-metadata a {
+  font-size: 0.72rem;
+  line-height: 1.15;
+}
+
+.book-detail-page .book-chip-group {
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.book-detail-page .book-chip-group h3 {
+  font-size: 0.82rem;
+}
+
+.book-detail-page .book-chip-list {
+  gap: 4px;
+}
+
+.book-detail-page .book-detail-note {
+  gap: 2px;
+  margin-top: 6px;
+  padding-top: 6px;
+}
+
+.book-detail-page .book-detail-note strong {
+  font-size: 0.82rem;
+}
+
+.book-detail-page .book-detail-note p {
+  font-size: 0.74rem;
+  line-height: 1.25;
+}
+
+.book-detail-page .book-timeline {
+  gap: 6px;
+}
+
+.book-detail-page .book-timeline-list,
+.book-detail-page .book-timeline-item article {
+  gap: 6px;
+}
+
+.book-detail-page .book-timeline-item article {
+  padding: 7px;
+}
+
+.book-detail-page .book-timeline-item-header {
+  gap: 5px;
+}
+
+.book-detail-page .book-timeline-item-header time {
+  margin-bottom: 2px;
+}
+
+.book-detail-page .book-timeline-item-header h3 {
+  font-size: 0.86rem;
+}
+
+.book-detail-page .book-timeline-progress {
+  gap: 4px;
+}
+
+.book-detail-page .book-timeline-progress p {
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.book-detail-page .book-timeline-facts {
+  gap: 4px;
+}
+
+.book-detail-page .book-timeline-facts dd {
+  font-size: 0.78rem;
+}
+
+.book-detail-page .book-timeline-notes {
+  padding-top: 5px;
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+@media (min-width: 861px) {
+  .book-detail-page .book-detail-summary .book-detail-section-header > div {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr);
+    align-items: center;
+    gap: 6px 10px;
+  }
+
+  .book-detail-page .book-detail-summary .book-detail-section-header .panel-label {
+    margin: 0;
+  }
+
+  .book-detail-page .book-detail-panel > .book-detail-section-header > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .book-detail-page .book-detail-layout > .book-detail-panel:last-child .book-chip-group {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .book-detail-page .book-timeline > .book-detail-section-header {
+    display: block;
+  }
+
+  .book-detail-page .book-timeline > .book-detail-section-header > div {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .book-detail-page .book-timeline > .book-detail-section-header > div > p:last-child {
+    justify-self: end;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .book-detail-page .book-timeline-item article {
+    grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1.25fr);
+    align-items: center;
+    column-gap: 10px;
+  }
+
+  .book-detail-page .book-timeline-facts,
+  .book-detail-page .book-timeline-notes {
+    grid-column: 1 / -1;
+  }
+}

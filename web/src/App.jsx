@@ -108,22 +108,14 @@ function LibraryPage() {
       eyebrow="Biblioteca"
       title="Sua biblioteca"
       description="Acompanhe cada leitura a partir dos JSONs versionados no seu repositorio."
-      actions={
-        <>
-          <Link className="button-link button-link-primary" to="/new/book">
-            Novo livro
-          </Link>
-          <Link className="button-link" to="/new/strike">
-            Novo strike
-          </Link>
-        </>
-      }
     >
-      <LibraryView
-        libraryState={libraryState}
-        libraryUrlState={libraryUrlState}
-        onLibraryUrlStateChange={handleLibraryUrlStateChange}
-      />
+      <div className="library-page-body">
+        <LibraryView
+          libraryState={libraryState}
+          libraryUrlState={libraryUrlState}
+          onLibraryUrlStateChange={handleLibraryUrlStateChange}
+        />
+      </div>
     </Page>
   );
 }
@@ -212,65 +204,64 @@ function LibraryView({
   }
 
   return (
-    <section className="library-surface" aria-labelledby="library-grid-title">
-      <header className="library-section-header">
-        <div>
-          <p className="panel-label">Acervo local</p>
-          <h2 id="library-grid-title">Livros registrados</h2>
-          <p>
-            Progresso declarado vem dos arquivos de Book; paginas e sessoes
-            documentadas vem dos Strikes.
-          </p>
-        </div>
-        <div className="library-header-actions">
+    <>
+      <section className="library-surface" aria-labelledby="library-grid-title">
+        <h2 className="visually-hidden" id="library-grid-title">
+          Livros registrados
+        </h2>
+
+        <div className="library-overview-row">
           <div className="library-context" aria-label="Contexto da biblioteca">
             <span>{formatBookCount(runtimeMetrics.summary.totalBooks)}</span>
           </div>
+
           <LibrarySortControls
             activeOption={activeSortOption}
             options={LIBRARY_SORT_OPTIONS}
             sortId={activeSortOption.id}
             onSortChange={handleLibrarySortChange}
           />
-        </div>
-      </header>
 
-      <dl className="library-totals" aria-label="Resumo da biblioteca">
-        <div>
-          <dt>Sessoes documentadas</dt>
-          <dd>{runtimeMetrics.summary.totalStrikes}</dd>
+          <dl className="library-totals" aria-label="Resumo da biblioteca">
+            <div>
+              <dt>Sessoes documentadas</dt>
+              <dd>{runtimeMetrics.summary.totalStrikes}</dd>
+            </div>
+            <div>
+              <dt>Paginas documentadas</dt>
+              <dd>{runtimeMetrics.summary.totalPagesRead}</dd>
+            </div>
+            <div>
+              <dt>Categorias</dt>
+              <dd>{runtimeMetrics.summary.totalCategories}</dd>
+            </div>
+          </dl>
         </div>
-        <div>
-          <dt>Paginas documentadas</dt>
-          <dd>{runtimeMetrics.summary.totalPagesRead}</dd>
+
+        <div className="library-results" id="library-results">
+          {sortedBooks.length === 0 && activeFilterCount > 0 ? (
+            <LibraryNoFilterMatches onClearFilters={handleLibraryFiltersClear} />
+          ) : (
+            <LibraryGrid books={sortedBooks} />
+          )}
         </div>
-        <div>
-          <dt>Categorias</dt>
-          <dd>{runtimeMetrics.summary.totalCategories}</dd>
-        </div>
-      </dl>
+        {warnings.length > 0 ? <RuntimeWarnings warnings={warnings} /> : null}
+      </section>
 
       {runtimeMetrics.books.length > 0 ? (
-        <LibraryFilterControls
-          activeFilterCount={activeFilterCount}
-          filters={activeFilters}
-          groups={filterOptions}
-          resultCount={filteredBooks.length}
-          totalCount={runtimeMetrics.books.length}
-          onClearFilters={handleLibraryFiltersClear}
-          onToggleFilter={handleLibraryFilterToggle}
-        />
+        <aside className="library-sidebar" aria-label="Filtros da biblioteca">
+          <LibraryFilterControls
+            activeFilterCount={activeFilterCount}
+            filters={activeFilters}
+            groups={filterOptions}
+            resultCount={filteredBooks.length}
+            totalCount={runtimeMetrics.books.length}
+            onClearFilters={handleLibraryFiltersClear}
+            onToggleFilter={handleLibraryFilterToggle}
+          />
+        </aside>
       ) : null}
-
-      <div className="library-results" id="library-results">
-        {sortedBooks.length === 0 && activeFilterCount > 0 ? (
-          <LibraryNoFilterMatches onClearFilters={handleLibraryFiltersClear} />
-        ) : (
-          <LibraryGrid books={sortedBooks} />
-        )}
-      </div>
-      {warnings.length > 0 ? <RuntimeWarnings warnings={warnings} /> : null}
-    </section>
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function LibraryFilterControls({
   activeFilterCount = 0,
@@ -10,16 +10,39 @@ function LibraryFilterControls({
   onToggleFilter,
 }) {
   const hasActiveFilters = activeFilterCount > 0;
+  const [isExpanded, setIsExpanded] = useState(hasActiveFilters);
+  const panelId = 'library-filter-groups';
 
   return (
-    <section className="library-filter-controls" aria-labelledby="library-filter-title">
+    <section
+      className={
+        isExpanded
+          ? 'library-filter-controls'
+          : 'library-filter-controls is-collapsed'
+      }
+      aria-labelledby="library-filter-title"
+    >
       <div className="library-filter-toolbar">
-        <div>
-          <h3 id="library-filter-title">Filtros</h3>
-          <p aria-live="polite">
-            {formatResultCount(resultCount, totalCount, activeFilterCount)}
-          </p>
-        </div>
+        <button
+          className="library-filter-toggle"
+          type="button"
+          aria-controls={panelId}
+          aria-expanded={isExpanded}
+          onClick={() => setIsExpanded((current) => !current)}
+        >
+          <span className="library-filter-toggle-copy">
+            <span className="library-filter-toggle-title" id="library-filter-title">
+              Filtros
+            </span>
+            <span className="library-filter-toggle-status" aria-live="polite">
+              {formatResultCount(resultCount, totalCount, activeFilterCount)}
+            </span>
+          </span>
+          <span className="library-filter-toggle-icon" aria-hidden="true">
+            {isExpanded ? '−' : '+'}
+          </span>
+        </button>
+
         <button
           className="button-link"
           type="button"
@@ -31,42 +54,44 @@ function LibraryFilterControls({
         </button>
       </div>
 
-      <div className="library-filter-groups">
-        {groups.map((group) => (
-          <fieldset className="library-filter-group" key={group.id}>
-            <legend>{group.label}</legend>
-            {group.options.length > 0 ? (
-              <div className="library-filter-options">
-                {group.options.map((option) => {
-                  const isSelected = (filters[group.id] || []).includes(option.value);
+      {isExpanded ? (
+        <div className="library-filter-groups" id={panelId}>
+          {groups.map((group) => (
+            <fieldset className="library-filter-group" key={group.id}>
+              <legend>{group.label}</legend>
+              {group.options.length > 0 ? (
+                <div className="library-filter-options">
+                  {group.options.map((option) => {
+                    const isSelected = (filters[group.id] || []).includes(option.value);
 
-                  return (
-                    <label
-                      className={
-                        isSelected
-                          ? 'library-filter-option is-active'
-                          : 'library-filter-option'
-                      }
-                      key={option.value}
-                    >
-                      <input
-                        type="checkbox"
-                        aria-controls="library-results"
-                        checked={isSelected}
-                        onChange={() => onToggleFilter(group.id, option.value)}
-                      />
-                      <span>{option.label}</span>
-                      <small>{formatOptionCount(option.count)}</small>
-                    </label>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="library-filter-empty-option">Sem dados para este filtro</p>
-            )}
-          </fieldset>
-        ))}
-      </div>
+                    return (
+                      <label
+                        className={
+                          isSelected
+                            ? 'library-filter-option is-active'
+                            : 'library-filter-option'
+                        }
+                        key={option.value}
+                      >
+                        <input
+                          type="checkbox"
+                          aria-controls="library-results"
+                          checked={isSelected}
+                          onChange={() => onToggleFilter(group.id, option.value)}
+                        />
+                        <span>{option.label}</span>
+                        <small>{formatOptionCount(option.count)}</small>
+                      </label>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="library-filter-empty-option">Sem dados para este filtro</p>
+              )}
+            </fieldset>
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

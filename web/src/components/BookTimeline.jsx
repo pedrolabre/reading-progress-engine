@@ -10,9 +10,6 @@ function BookTimeline({ entries = [], title }) {
           <h2 id="book-timeline-title">Sessoes documentadas em ordem cronologica</h2>
           <p>{formatTimelineCount(entries.length)}</p>
         </div>
-        <Link className="button-link" to="/new/strike">
-          Novo strike
-        </Link>
       </header>
 
       {entries.length === 0 ? (
